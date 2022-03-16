@@ -9,7 +9,7 @@ web_data = []
 # First page starts at 0
 # For testing, using only 1 page for faster results
 page_num = 0
-while page_num != 1:
+while page_num != 2:
     url = 'https://www.cidrap.umn.edu/news-perspective?page='+str(page_num)
 
     data = requests.get(url)
@@ -65,11 +65,19 @@ while page_num != 1:
             reports.append({"disease": diseases, "locations": locations})
             
             
-            #TO FIX - Scans with dot points as main texts 
+            # Main texts -> scraping text under url link for articles
             try:
                 main_text = sub.select_one('.field-item.even p').text   
             except AttributeError:
-                main_text = "None"  
+                bullet_pts = sub.select_one('div.field.field-name-field-bullet-points.field-type-text.field-label-hidden')
+                main_text = []
+                for t in bullet_pts.select('.field-item.even'):
+                    t = t.text
+                    main_text.append(t)
+                for t in bullet_pts.select('.field-item.odd'):
+                    t = t.text
+                    main_text.append(t)    
+                  
             
             headline = sub.select_one('.node-title.fieldlayout.node-field-title a').text                      
             web_data.append({"url": art_url, "date_of_publication": date, "headline": headline, "main_text": main_text, "report": reports})
