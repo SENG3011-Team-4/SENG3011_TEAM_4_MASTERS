@@ -24,7 +24,6 @@ class LoginInfo(BaseModel):
     username: str
     password: str
 
-
 class SearchItem(BaseModel):
     """
     To be later modified depending on DB Implementation
