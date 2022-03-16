@@ -4,7 +4,7 @@ resources.
 """
 
 from typing import List, Optional
-from fastapi import Body, FastAPI
+from fastapi import Body, FastAPI, HTTPException
 from pydantic import BaseModel
 
 # Base Input and Response Models
@@ -24,12 +24,13 @@ class LoginInfo(BaseModel):
     username: str
     password: str
 
+
 class SearchItem(BaseModel):
     """
     To be later modified depending on DB Implementation
     """
     keyterms: str
-    location: dict
+    geoname_location_id: dict
     start_date: str
     end_date: str
     timezone: Optional[str] = None
@@ -119,27 +120,19 @@ async def healtchcheck():
 
 @app.get(
     '/search',
-    response_model = ArticleJson
 )
 async def search(
-    search_item: SearchItem = Body(
-        ...,
-        example = {
-            "keyterms": "Anthrax,Zika",
-            "location": {
-                "geonames_id": 1234567
-            },
-            "start_date": "2015-10-01T08:45:10",
-            "end_date": "2015-11-01T19:37:12",
-            "timezone": None,
-            "account_id": None
-        }
-    ),
+    keyterms: str,
+    geoname_location_id: int,
+    start_date: str,
+    end_date: str,
+    timezone: Optional[str] = None,
+    account_id: Optional[str] = None
 ):
-    # Error checking dates and location
+    # Error checking dates and geoname_location_id
     # Add to search metrics
     # Pass hardcoded value if passes all correct values
-    pass
+    raise HTTPException(status_code=404, detail="Endpoint not active")
 
 @app.get(
     '/search/key-frequency',
@@ -147,7 +140,7 @@ async def search(
 )
 async def key_frequency():
     # Obtain most frequently searched keys in DB
-    pass
+    raise HTTPException(status_code=404, detail="Endpoint not active")
 
 @app.get(
     '/search/history',
@@ -155,4 +148,5 @@ async def key_frequency():
 )
 async def search_history():
     # Right now it is to get the global search history
-    pass
+    raise HTTPException(status_code=404, detail="Endpoint not active")
+
