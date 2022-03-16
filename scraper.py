@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
+import pycountry
 
 web_data = []
 
@@ -32,8 +33,24 @@ while page_num != 1:
             
             report = art_html.select_one('div.node-inner')
             
-            # TODO
-            #location
+            # Getting each paragraph in the article
+            art_start = art_html.select_one('div.field.field-name-field-body.field-type-text-long.field-label-hidden')
+            art_para = art_start.select('div.field-item.even p')
+            
+            # TODO Fix up location -> some countries not included + add cities
+            locations = []
+            for p in art_para:
+                p = p.text
+                # United States written as US in most articles
+                if "US" in p:
+                    if "United States" not in locations:
+                        locations.append("United States")
+                for c in pycountry.countries:
+                    if c.name in p:
+                        if c.name not in locations:
+                            locations.append(c.name)             
+                        
+            
             #event date
             #syndrome
             
@@ -44,7 +61,8 @@ while page_num != 1:
             for d in diseases_filed:
                 disease = d.select_one('.field-item.even a').text
                 diseases.append(disease)    
-            reports.append({"disease": diseases})
+                
+            reports.append({"disease": diseases, "locations": locations})
             
             
             #TO FIX - Scans with dot points as main texts 
