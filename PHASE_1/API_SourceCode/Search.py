@@ -2,26 +2,34 @@
 import pymongo
 from datetime import datetime
 import time
+from database import *
 def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	'''
 	This function get requirements from users and return the Data that meets requirements
 	Also those requirements will stored into search_his database
 	'''
 	mydb = getdatabase()
-	keyterms = key_terms.split(",")#Split the key_terms string into list
-	output = []#Create a list to store the output
-	if Timezeon != "UTC":
+
+	keyterms = key_terms.split(",") # Split the key_terms string into list
+	output = [] # Create a list to store the output
+
+	if Timezone != "UTC":
 		start_date = Check_Timezone(start_date,Timezone)#Standardize time
 		end_date = Check_Timezone(end_date,Timezone)#Standardize time
 	for key in keyterms:
 		Search_Frequentlykey_update_v1(key)#update key terms search history
+		params_dict = {
+			
+		}
+		get_reports()
 		search_result = mydb.webdata.find({'$web_data': {'$search': key}},
 								  {'$where': checkdate(obj.start_date,start_date,"start") == True},
 								  {'$where': checkdate(obj.end_date,end_date,"end") == True},
 								  {'location':location}) # Find all the web_data that match the requirements
-		for result in search_result
+		for result in search_result:
 			if output.indexof(result['web_data']) >= 0:#If that web data already in list
 				output.append(result['web_data'])	# one data may contain multiple key terms(I can't think of a better logic in pymongo,
+	
 	record_search = {
 		"key_terms":key_terms,
 		"location":location,
@@ -37,6 +45,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
     	mydb.search_his.insert(record_search)
 
     return {"output":output}# [report_json] ?
+
 def Search_Frequently_key_v1():
 	'''	
 	Show the top five key terms searched by users
@@ -77,10 +86,13 @@ def Search_History_v1():
     	output.append(his) 
     
     return {"records":output}#return a list of dic
+
 def getdatabase():
 	return pymongo.MongoClient('change this')
+
 def Check_Timezone(date,Timezone):
 	pass
+
 def checkdate(time1,time2,check):
 
 	date_format = "%Y-%m-%dT%H:%M:%S"
