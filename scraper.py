@@ -3,9 +3,13 @@ from bs4 import BeautifulSoup
 from pprint import pprint
 import pycountry
 
+# CIDRAP doesn't have syndromes in articles -> need to input them manually
+syndrome_list = ["Haemorrhagic Fever", "Acute Flacid Paralysis", "Acute gastroenteritis", "Acute respiratory syndrome", "Influenza-like illness", "Acute fever and rash", "Fever of unknown origin", "Encephalitis", "Meningitis"]
+
 web_data = []
 
 # Scraping first 10 pages
+# Final possible page: 1481
 # First page starts at 0
 # For testing, using only 1 page for faster results
 page_num = 0
