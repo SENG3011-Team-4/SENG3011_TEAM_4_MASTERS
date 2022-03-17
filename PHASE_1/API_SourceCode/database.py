@@ -6,6 +6,7 @@ cluster = MongoClient("mongodb+srv://team4masters:uXTbGOYCXJTwTlIN@cluster0.d2xy
 db = cluster["API-Database"]
 rpts = db["Reports"]
 hist = db["History"]
+keyTerms = db["Key-Terms"]
 
 """
 # ==== WRITING DATA ====
@@ -48,13 +49,11 @@ def write_report(reports):
     Writes a disease report to the reports collection
 
     :param reports: list of dictionaries
-     report = {
-         key_terms,
-         location,
-         start_date,
-         end_date,
-
-     }
+    report = {
+        key_terms,
+        location,
+        date,
+    }
     :param param2: this is a second param
     :returns: this is a description of what is returned
     :raises keyError: raises an exception
@@ -62,14 +61,39 @@ def write_report(reports):
     rpts.insert_many(reports)
 
 def get_reports(args):
-    return rpts.find( {
+    return rpts.find({
         "key_terms": { "$in": args.key_terms }, 
         "location": args.location,
         "date": { "$gt": args.start_date, "$lt": args.end_date}
+    })
 
-     } )
+def get_frequent_keys():
+    return keyTerms.find({}).sort({"frequency": -1}).limit(5)
+
+def update_frequent_keys(key):
+    try:
+        keyTerms.update_one({"key": key}, {"$inc": {"frequency":1}})
+    except:
+        keyTerms.insert_one({
+            "key": key, 
+            "frequency": 1
+        })
 
 def get_history():
-    return hist.find({})
+    return hist.find({}).sort( {"search_time": 1} ).limit(5)
 
-def modify_history():
+def modify_history(search_record):
+    # not sure if searching a database starts is FIFO or LIFO, need to double check in testing
+    hist.insert_one(search_record)
+
+    
+    #if history.len() > 5:
+    #    # find the item with the earliest search time
+    #    earliest = history[0]["search_time"]
+    #    for item in history:
+    #        if item["search_time"] < earliest:
+    #            earliest = item["search_time"]
+    #    hist.delete_one({"search_time": earliest})
+    #    hist.insert_one(search_record)
+    #else:
+    #    hist.insert_one(search_record)
