@@ -9,7 +9,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	'''
 	mydb = getdatabase()
 	keyterms = key_terms.split(",")#Split the key_terms string into list
-	output = []#Create a list to store the output
+	output = {}#Create a list to store the output
 	if Timezeon != "UTC":
 		start_date = Check_Timezone(start_date,Timezone)#Standardize time
 		end_date = Check_Timezone(end_date,Timezone)#Standardize time
@@ -20,8 +20,11 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 								  {'$where': checkdate(obj.end_date,end_date,"end") == True},
 								  {'location':location}) # Find all the web_data that match the requirements
 		for result in search_result
-			if output.indexof(result['web_data']) >= 0:#If that web data already in list
-				output.append(result['web_data'])	# one data may contain multiple key terms(I can't think of a better logic in pymongo,
+			if result['web_data'] not in output:
+				output[result['web_data']] = 1	
+			else:
+				output[result['web_data']] = output[result['web_data']] + 1
+	sorted_output = sorted(output.items(),key=lambda x: x[1],reverse=True)
 	record_search = {
 		"key_terms":key_terms,
 		"location":location,
@@ -35,8 +38,10 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
     else:
     	mydv["search_his"]
     	mydb.search_his.insert(record_search)
-
-    return {"output":output}# [report_json] ?
+	returnlist = []
+	for key in sorted_output:
+		returnlist.append(key)
+    return {"output":returnlist}# [report_json] ?
 def Search_Frequently_key_v1():
 	'''	
 	Show the top five key terms searched by users
