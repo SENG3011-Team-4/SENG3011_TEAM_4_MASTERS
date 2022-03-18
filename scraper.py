@@ -50,14 +50,14 @@ while page_num != 1:
                     if "United States" not in locations:
                         locations.append("United States")
                 # Korea written as Republic of Korea in pycountry        
-                elif "South Korea" in p:
+                if "South Korea" in p:
                     if "South Korea" not in locations:
                         locations.append("South Korea")        
-                elif "North Korea" in p:
+                if "North Korea" in p:
                     if "North Korea" not in locations:
                         locations.append("North Korea")
                 # Vietnam written as Viet Nam in pycountry
-                elif "Vietnam" in p:
+                if "Vietnam" in p:
                     if "Vietnam" not in locations:
                         locations.append("Vietnam")                
                 for c in pycountry.countries:
