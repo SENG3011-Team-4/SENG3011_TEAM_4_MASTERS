@@ -21,9 +21,10 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	if Timezone != "UTC":
 		start_date = Check_Timezone(start_date,Timezone)#Standardize time
 		end_date = Check_Timezone(end_date,Timezone)#Standardize time
+	print("Keyterms: ", keyterms)
 	for key in keyterms:
 		#Search_Frequentlykey_update_v1(key)
-		#update_frequent_keys(key)# update key terms search history
+		update_frequent_keys(key)# update key terms search history
 
 		# place input parameters into a dict and pass to the database
 		params_dict = {
