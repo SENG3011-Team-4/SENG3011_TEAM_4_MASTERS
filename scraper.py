@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
 from country_scraper import county_scraper
+from datetime import datetime
 
 # CIDRAP doesn't have syndromes in articles -> need to input them manually
 syndrome_list = ["Haemorrhagic Fever", "Acute Flacid Paralysis", "Acute gastroenteritis", "Acute respiratory syndrome", "Influenza-like illness", "Acute fever and rash", "Fever of unknown origin", "Encephalitis", "Meningitis"]
@@ -9,6 +10,22 @@ syndrome_list = ["Haemorrhagic Fever", "Acute Flacid Paralysis", "Acute gastroen
 web_data = []
 
 countries = county_scraper()
+
+def month_to_num(mon):
+    return {
+        'Jan': '01',
+        'Feb': '02',
+        'Mar': '03',
+        'Apr': '04',
+        'May': '05',
+        'Jun': '06',
+        'Jul': '07',
+        'Aug': '08',
+        'Sep': '09',
+        'Oct': '10',
+        'Nov': '11',
+        'Dec': '12'
+    }[mon]
 
 # Scraping first 10 pages
 # Final possible page: 1481
@@ -31,7 +48,13 @@ while page_num != 1:
             
             reports = []
             
+            # fetching and formatting date
             date = sub.select_one('.date-display-single').text
+            date = date.split()
+            date[1] = date[1].replace(",","")
+            date[0] = month_to_num(date[0])
+            date = date[2]+"-"+date[0]+"-"+date[1]+"T:00:00:00"
+            
             art_url = "http://cidrap.umn.edu"+ sub.select_one('.node-title.fieldlayout.node-field-title a')['href']  
             
             # Opening article to be scraped
