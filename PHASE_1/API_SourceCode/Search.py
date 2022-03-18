@@ -8,7 +8,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	This function get requirements from users and return the Data that meets requirements
 	Also those requirements will stored into search_his database
 	'''
-	mydb = getdatabase()
+	#mydb = getdatabase()
 
 	keyterms = key_terms.split(",") # Split the key_terms string into list
 	output = [] # Create a list to store the output
@@ -18,7 +18,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 		end_date = Check_Timezone(end_date,Timezone)#Standardize time
 	for key in keyterms:
 		#Search_Frequentlykey_update_v1(key)
-		update_frequent_keys(key)# update key terms search history
+		#update_frequent_keys(key)# update key terms search history
 
 		# place input parameters into a dict and pass to the database
 		params_dict = {
@@ -37,10 +37,11 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 		#						  {'location':location}) # Find all the web_data that match the requirements
 
 		for result in search_result:
-			if result['web_data'] not in output:
-				output[result['web_data']] = 1	
-			else:
-				output[result['web_data']] = output[result['web_data']] + 1
+			print(result)
+			#if result['web_data'] not in output:
+			#	output[result['web_data']] = 1	
+			#else:
+			#	output[result['web_data']] = output[result['web_data']] + 1
 
 	# 	alternate simple method to pass key_terms to database, but would need other way to count the number of matching key terms
 	# 
@@ -57,28 +58,28 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	#
 
 	
-	sorted_output = sorted(output.items(),key=lambda x: x[1],reverse=True)
-	record_search = {
-		"key_terms":key_terms,
-		"location":location,
-		"start_date":start_date,
-		"end_date":end_date,
-		"Timezone":Timezone,
-		"search_time":time.time()
-	}
+	#sorted_output = sorted(output.items(),key=lambda x: x[1],reverse=True)
+	#record_search = {
+	#	"key_terms":key_terms,
+	#	"location":location,
+	#	"start_date":start_date,
+	#	"end_date":end_date,
+	#	"Timezone":Timezone,
+	#	"search_time":time.time()
+	#}
 
-	modify_history(record_search)
+	#modify_history(record_search)
 	#if "search_his" in mydb.list_collection_names():
 	#	mydb.search_his.insert(record_search)	# update search history
 	#else:
     #	mydv["search_his"]
     #	mydb.search_his.insert(record_search)
 
-	returnlist = []
-	for key in sorted_output:
-		returnlist.append(key)
+	#returnlist = []
+	#for key in sorted_output:
+	#	returnlist.append(key)
 
-	return {"output":returnlist} # [report_json] ?
+	return #{"output":returnlist} # [report_json] ?
 
 def Search_Frequently_key_v1():
 	'''	
@@ -104,11 +105,11 @@ def Search_Frequentlykey_update_v1(keys):
 	key_his = mydb.history.find_one({'key':keys})
     
 	if key_his != None:
-    	mydb.history.update_one({'key':keys},{$inc:{'frequence':1}})
+		mydb.history.update_one({'key':keys},{'$inc':{'frequence':1}})
 	else:
-    	mydb.history.insert({'key':keys,'frequence':1})
+		mydb.history.insert({'key':keys,'frequence':1})
     
-    return {'is_success': True}
+	return {'is_success': True}
 def Search_History_v1():
 	'''
 	Records the last five searches
@@ -147,5 +148,7 @@ def checkdate(time1,time2,check):
 			return False
 		else:
 			return True
-
+if __name__ == '__main__':
+    print(search_v1("hi","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
+    # print(__name__)
 
