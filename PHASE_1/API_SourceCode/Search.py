@@ -72,17 +72,17 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	#
 
 	
-	sorted_output = sorted(output.items(),key=lambda x: x[1],reverse=True)
-	#record_search = {
-	#	"key_terms":key_terms,
-	#	"location":location,
-	#	"start_date":start_date,
-	#	"end_date":end_date,
-	#	"Timezone":Timezone,
-	#	"search_time":time.time()
-	#}
+	#sorted_output = sorted(output.items(),key=lambda x: x[1],reverse=True)
+	record_search = {
+		"key_terms":key_terms,
+		"location":location,
+		"start_date":start_date,
+		"end_date":end_date,
+		"Timezone":Timezone,
+		"search_time":time.time()
+	}
 	
-	#modify_history(record_search)
+	modify_history(record_search)
 	#if "search_his" in mydb.list_collection_names():
 	#	mydb.search_his.insert(record_search)	# update search history
 	#else:
@@ -153,6 +153,9 @@ def Check_Timezone(date,Timezone):
 	timezone_offset = Timezone[3:]
 	hrs = int(timezone_offset[1:3])
 	mins = int(timezone_offset[4:6])
+
+	#TODO add regex for timezone string
+
 	date = datetime.strptime(date,"%Y-%m-%dT%H:%M:%S")
 	#print("Date before: ", date)
 	if timezone_offset[0] == "+":
