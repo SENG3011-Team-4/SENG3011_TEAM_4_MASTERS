@@ -29,7 +29,7 @@ class SearchItem(BaseModel):
     To be later modified depending on DB Implementation
     """
     keyterms: str
-    geoname_location_id: dict
+    location: str
     start_date: str
     end_date: str
     timezone: Optional[str] = None
@@ -172,7 +172,7 @@ async def healtchcheck():
 )
 async def search(
     keyterms: str = Query(None, description='Input ASCII string collection of diseases e.g. "Zika,Coronavirus"'),
-    geoname_location_id: int = Query(None, description='Geolocation IDs (7 digits) e.g. 1234567'),
+    location: str = Query(None, description='Input ASCII string collection of location e.g. United states'),
     start_date: str = Query(None, description='Start date format yyyy-MM-ddTHH:mm:ss e.g. "2015-10-01T08:45:10"'),
     end_date: str = Query(None, description='End date format yyyy-MM-ddTHH:mm:ss e.g. "2015-11-01T19:37:12"'),
     timezone: Optional[str] = Query(None, description='(OPTIONAL) Timezone format as UTC+HH e.g. UTC+12)'),
@@ -185,7 +185,7 @@ async def search(
     if not (isinstance(geoname_location_id, int)):
         raise HTTPException(status_code=400, detail="Parameter validation has failed")
     # Error checking dates and geoname_location_id
-    data = search_v1(key_terms,location,start_date,end_date,timezone)
+    data = search_v1(keyterms,location,start_date,end_date,timezone)
     return {data}
    # raise HTTPException(status_code=404, detail="Endpoint not active")
 
