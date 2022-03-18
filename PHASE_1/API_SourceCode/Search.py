@@ -49,14 +49,17 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 				#print(result)
 		#except:
 			#print("Error encountered")
-		for result in search_result:
-			#print(result)
-			if result['headline'] not in output:
-				output[result['headline']] = 1
-				del result['_id']
-				output_dic[result['headline']] = result	
-			else:
-				output[result['headline']] = output[result['headline']] + 1
+		try:
+			for result in search_result:
+				#print(result)
+				if result['headline'] not in output:
+					output[result['headline']] = 1
+					del result['_id']
+					output_dic[result['headline']] = result	
+				else:
+					output[result['headline']] = output[result['headline']] + 1
+		except:
+			print("Noting found")
 
 	# 	alternate simple method to pass key_terms to database, but would need other way to count the number of matching key terms
 	# 
@@ -201,7 +204,7 @@ if __name__ == '__main__':
     #print(search_v1("Zika","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
     #print(search_v1("MERS","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
     print("#######################################################################")
-    print(search_v1("Study had","United states","2015-05-02T15:12:12","2025-05-02T15:12:12","UTC"))
+    print(search_v1("Study had","United States","2015-05-02T15:12:12","2025-05-02T15:12:12","UTC"))
     print(Search_Frequently_key_v1())
     print(Search_History_v1())
     # print(__name__)
