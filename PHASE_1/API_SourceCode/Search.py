@@ -30,7 +30,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 
 		# place input parameters into a dict and pass to the database
 		params_dict = {
-			"key_terms": [key],
+			"key_terms": key,
 			"location": location,
 			"start_date": start_date,
 			"end_date": end_date
@@ -51,11 +51,12 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 			#print("Error encountered")
 		for result in search_result:
 			#print(result)
-			if result['_id'] not in output:
-				output[result['_id']] = 1
-				output_dic[result['_id']] = result	
+			if result['headline'] not in output:
+				output[result['headline']] = 1
+				del result['_id']
+				output_dic[result['headline']] = result	
 			else:
-				output[result['_id']] = output[result['_id']] + 1
+				output[result['headline']] = output[result['headline']] + 1
 
 	# 	alternate simple method to pass key_terms to database, but would need other way to count the number of matching key terms
 	# 
@@ -96,6 +97,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	for key in sorted_output:
 		#print(key[0]
 		if output_dic[key[0]] != None:
+			#print(key[1])
 			returnlist.append(output_dic[key[0]])
 	#for key in output_dic.items():
 	#	print(key)
@@ -113,7 +115,12 @@ def Search_Frequently_key_v1():
 	#	output.append(his['key']) 
     	
 	#return {"keys":output}
-	return get_frequent_keys()
+	results = get_frequent_keys()
+	output = []
+	for result in results:
+		del result['_id']
+		output.append(result)
+	return output
 
 def Search_Frequentlykey_update_v1(keys):
 	'''
@@ -143,8 +150,13 @@ def Search_History_v1():
     #	output.append(his) 
     
     #return {"records":output}#return a list of dic
+	results = get_history()
+	output = []
+	for result in results:
+		del result['_id']
+		output.append(result)
+	return output
 
-	return get_history()
 
 #def getdatabase():
 #	return pymongo.MongoClient('change this')
@@ -188,6 +200,9 @@ if __name__ == '__main__':
     #print(search_v1("Zika,MERS,Anthrax","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
     #print(search_v1("Zika","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
     #print(search_v1("MERS","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
-    print(search_v1("Zika,MERS,Anthrax","Sydney","2015-05-02T15:12:12","2020-05-02T15:12:12","UTC+03:00"))
+    print("#######################################################################")
+    print(search_v1("Study had","United states","2015-05-02T15:12:12","2025-05-02T15:12:12","UTC"))
+    print(Search_Frequently_key_v1())
+    print(Search_History_v1())
     # print(__name__)
-    Check_Timezone("2020-05-02T12:12:12", "UTC+01:15")
+    #Check_Timezone("2020-05-02T12:12:12", "UTC+01:15")

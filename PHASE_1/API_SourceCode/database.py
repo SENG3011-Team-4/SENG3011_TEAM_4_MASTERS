@@ -1,10 +1,14 @@
 import pymongo
 from pymongo import MongoClient
-
+from scraper import web_data
+import time
 # Accessing database from the cloud
 cluster = MongoClient("mongodb+srv://team4masters:uXTbGOYCXJTwTlIN@cluster0.d2xyd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 db = cluster["API-Database"]
+
 rpts = db["Reports"]
+rpts.insert_many(web_data)
+
 hist = db["History"]
 keyTerms = db["KeyTerms"]
 
@@ -59,34 +63,46 @@ def write_report(reports):
     :raises keyError: raises an exception
     """
     rpts.insert_many(reports)
+    return
 
 def get_reports(args):
-    return rpts.find({
-        "key_terms": { "$in": args["key_terms"] },
-        "location": args["location"],
-        "date": { "$gt": args["start_date"], "$lt": args["end_date"]}
-    })
+
+	results = rpts.find({
+		"$or": [{"headline": {"$regex": args["key_terms"], "$options": 'i'} }#, 
+				{"main_text": {"$regex": args["key_terms"], "$options": 'i'} }
+			]},
+			#{"reports":{"$elemMatch":{"locations":{"$elemMatch":{"$gt": args["start_date"], "$lt": args["end_date"]}}}}}
+		 #{"reports":{"$elemMatch":{"event_date":{"$elemMatch":{"$gt": args["start_date"], "$lt": args["end_date"]}}}}}      
+		#{"reports":{"event_date":{"$gt": "2015-05-02T12:12:12", "$lt": "2020-05-02T12:12:12"}}}
+		)
+	return results
 
 def get_frequent_keys():
     #return keyTerms.find({}).sort({"frequency": -1}).limit(5)
     return keyTerms.find().sort("key", pymongo.ASCENDING).sort( "frequency", pymongo.DESCENDING ).limit(5)
 
 def update_frequent_keys(key):
-    keys = keyTerms.find_one({"key": key})
-    if keys != None:
-        keyTerms.update_one({"key": key}, {"$inc": {"frequency":1}})
-    else:
-        keyTerms.insert_one({
-            "key": key, 
-            "frequency": 1
-        })
-
+	keys = keyTerms.find_one({"key": key})
+	if keys != None:
+		keyTerms.update_one({"key": key}, {"$inc": {"frequency":1}})
+	else:
+		keyTerms.insert_one({
+		    "key": key, 
+		    "frequency": 1
+		})
+	return
 def get_history():
-    return hist.find({}).sort("search_time", pymongo.ASCENDING).limit(5)
+    return hist.find({}).sort("search_time", pymongo.ASCENDING).sort( "time", pymongo.DESCENDING ).limit(5)
 
 def modify_history(search_record):
     # not sure if searching a database starts is FIFO or LIFO, need to double check in testing
-    hist.insert_one(search_record)
+    hist.insert_one({
+		    "his": search_record, 
+		    "time": time.time()
+		})
+    
+    
+    (search_record)
 
     
     #if history.len() > 5:
