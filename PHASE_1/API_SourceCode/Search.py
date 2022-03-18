@@ -1,6 +1,6 @@
 
 import pymongo
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 from database import *
 import re
@@ -19,8 +19,10 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	if checkdate(start_date,end_date,"start"):
   		raise ValueError("Start date is later than End date")
 	if Timezone != "UTC":
-		start_date = Check_Timezone(start_date,Timezone)#Standardize time
-		end_date = Check_Timezone(end_date,Timezone)#Standardize time
+		start_date = Check_Timezone(start_date,Timezone) # Standardize time
+		#print("Standardised start date: ", start_date)
+		end_date = Check_Timezone(end_date,Timezone) # Standardize time
+		#print("Standardised end date: ", end_date)
 	print("Keyterms: ", keyterms)
 	for key in keyterms:
 		#Search_Frequentlykey_update_v1(key)
@@ -148,10 +150,23 @@ def Search_History_v1():
 #	return pymongo.MongoClient('change this')
 
 def Check_Timezone(date,Timezone):
-	pass
+	timezone_offset = Timezone[3:]
+	hrs = int(timezone_offset[1:3])
+	mins = int(timezone_offset[4:6])
+	date = datetime.strptime(date,"%Y-%m-%dT%H:%M:%S")
+	#print("Date before: ", date)
+	if timezone_offset[0] == "+":
+		# if UTC+01:00 is given, then we should minus 1 hr from the time to standardize to UTC
+		date = date - timedelta(hours=hrs, minutes=mins)
+		#print("Date after: ", date)
+	elif timezone_offset[0] == "-":
+		date = date + timedelta(hours=hrs, minutes=mins)
+		#print(date)
+	return date
+
+
 
 def checkdate(time1,time2,check):
-
 	date_format = "%Y-%m-%dT%H:%M:%S"
 	time_1 = datetime.strptime(time1, date_format)
 	time_2 = datetime.strptime(time2, date_format)
@@ -167,7 +182,9 @@ def checkdate(time1,time2,check):
 		else:
 			return True
 if __name__ == '__main__':
-    print(search_v1("Zika,MERS,Anthrax","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
+    #print(search_v1("Zika,MERS,Anthrax","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
     #print(search_v1("Zika","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
     #print(search_v1("MERS","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
+    print(search_v1("Zika,MERS,Anthrax","Sydney","2015-05-02T15:12:12","2020-05-02T15:12:12","UTC+03:00"))
     # print(__name__)
+    Check_Timezone("2020-05-02T12:12:12", "UTC+01:15")
