@@ -13,7 +13,7 @@ web_data = []
 # First page starts at 0
 # For testing, using only 1 page for faster results
 page_num = 0
-while page_num != 2:
+while page_num != 1:
     url = 'https://www.cidrap.umn.edu/news-perspective?page='+str(page_num)
 
     data = requests.get(url)
@@ -49,6 +49,17 @@ while page_num != 2:
                 if "US" in p:
                     if "United States" not in locations:
                         locations.append("United States")
+                # Korea written as Republic of Korea in pycountry        
+                elif "South Korea" in p:
+                    if "South Korea" not in locations:
+                        locations.append("South Korea")        
+                elif "North Korea" in p:
+                    if "North Korea" not in locations:
+                        locations.append("North Korea")
+                # Vietnam written as Viet Nam in pycountry
+                elif "Vietnam" in p:
+                    if "Vietnam" not in locations:
+                        locations.append("Vietnam")                
                 for c in pycountry.countries:
                     if c.name in p:
                         if c.name not in locations:
