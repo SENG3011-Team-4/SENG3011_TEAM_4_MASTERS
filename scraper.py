@@ -1,12 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
-import pycountry
+from country_scraper import county_scraper
 
 # CIDRAP doesn't have syndromes in articles -> need to input them manually
 syndrome_list = ["Haemorrhagic Fever", "Acute Flacid Paralysis", "Acute gastroenteritis", "Acute respiratory syndrome", "Influenza-like illness", "Acute fever and rash", "Fever of unknown origin", "Encephalitis", "Meningitis"]
 
 web_data = []
+
+countries = county_scraper()
 
 # Scraping first 10 pages
 # Final possible page: 1481
@@ -49,22 +51,11 @@ while page_num != 1:
                 # United States written as US in most articles
                 if "US" in p:
                     if "United States" not in locations:
-                        locations.append("United States")
-                # Korea written as Republic of Korea in pycountry        
-                if "South Korea" in p:
-                    if "South Korea" not in locations:
-                        locations.append("South Korea")        
-                if "North Korea" in p:
-                    if "North Korea" not in locations:
-                        locations.append("North Korea")
-                # Vietnam written as Viet Nam in pycountry
-                if "Vietnam" in p:
-                    if "Vietnam" not in locations:
-                        locations.append("Vietnam")                
-                for c in pycountry.countries:
-                    if c.name in p:
-                        if c.name not in locations:
-                            locations.append(c.name)             
+                        locations.append("United States")              
+                for c in countries:
+                    if c in p:
+                        if c not in locations:
+                            locations.append(c)             
                         
             
             #event date
@@ -82,19 +73,8 @@ while page_num != 1:
             
             
             # Main texts -> scraping text under url link for articles
-            try:
-                main_text = sub.select_one('.field-item.even p').text   
-            except AttributeError:
-                bullet_pts = sub.select_one('div.field.field-name-field-bullet-points.field-type-text.field-label-hidden')
-                main_text = []
-                for t in bullet_pts.select('.field-item.even'):
-                    t = t.text
-                    main_text.append(t)
-                for t in bullet_pts.select('.field-item.odd'):
-                    t = t.text
-                    main_text.append(t)    
-                  
-            
+            main_text = sub.select_one('.field-item.even p').text   
+                      
             headline = sub.select_one('.node-title.fieldlayout.node-field-title a').text                      
             web_data.append({"url": art_url, "date_of_publication": date, "headline": headline, "main_text": main_text, "report": reports})
             
