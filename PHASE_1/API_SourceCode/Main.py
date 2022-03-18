@@ -185,23 +185,24 @@ async def search(
     if not (isinstance(geoname_location_id, int)):
         raise HTTPException(status_code=400, detail="Parameter validation has failed")
     # Error checking dates and geoname_location_id
-
-    raise HTTPException(status_code=404, detail="Endpoint not active")
+    data = search_v1(key_terms,location,start_date,end_date,timezone)
+    return {data}
+   # raise HTTPException(status_code=404, detail="Endpoint not active")
 
 @app.get(
-    '/search/key-frequency',
-    response_model = SearchHistory,
-    responses = other_responses
+    '/search/key_frequency',
+    response_model = SearchHistory
 )
 async def key_frequency():
     # Obtain most frequently searched keys in DB
-    raise HTTPException(status_code=404, detail="Endpoint not active")
+    return Search_Frequently_key_v1()
+    #raise HTTPException(status_code=404, detail="Endpoint not active")
 
 @app.get(
     '/search/history',
-    response_model =  SearchHistory,
-    responses = other_responses
+    response_model =  SearchHistory
 )
 async def search_history():
     # Right now it is to get the global search history
-    raise HTTPException(status_code=404, detail="Endpoint not active")
+    return Search_History_v1()
+    #raise HTTPException(status_code=404, detail="Endpoint not active")
