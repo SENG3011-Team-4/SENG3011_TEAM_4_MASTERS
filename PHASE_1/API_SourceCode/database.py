@@ -6,7 +6,7 @@ cluster = MongoClient("mongodb+srv://team4masters:uXTbGOYCXJTwTlIN@cluster0.d2xy
 db = cluster["API-Database"]
 rpts = db["Reports"]
 hist = db["History"]
-keyTerms = db["Key-Terms"]
+keyTerms = db["KeyTerms"]
 
 """
 # ==== WRITING DATA ====
@@ -68,19 +68,21 @@ def get_reports(args):
     })
 
 def get_frequent_keys():
-    return keyTerms.find({}).sort({"frequency": -1}).limit(5)
+    #return keyTerms.find({}).sort({"frequency": -1}).limit(5)
+    return keyTerms.find().sort("key", pymongo.ASCENDING).sort( "frequency", pymongo.DESCENDING ).limit(5)
 
 def update_frequent_keys(key):
-    try:
+    keys = keyTerms.find_one({"key": key})
+    if keys != None:
         keyTerms.update_one({"key": key}, {"$inc": {"frequency":1}})
-    except:
+    else:
         keyTerms.insert_one({
             "key": key, 
             "frequency": 1
         })
 
 def get_history():
-    return hist.find({}).sort( {"search_time": 1} ).limit(5)
+    return hist.find({}).sort("search_time", pymongo.ASCENDING).limit(5)
 
 def modify_history(search_record):
     # not sure if searching a database starts is FIFO or LIFO, need to double check in testing

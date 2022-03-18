@@ -9,11 +9,11 @@ cluster = MongoClient("mongodb+srv://team4masters:uXTbGOYCXJTwTlIN@cluster0.d2xy
 db = cluster["API-Database"]
 rpts = db["Reports"]
 hist = db["History"]
-keyTerms = db["Key-Terms"]
+keyTerms = db["KeyTerms"]
 
 def emptyCollections():
-    rpts.delete_many({})
-    hist.delete_many({})
+    #rpts.delete_many({})
+    #hist.delete_many({})
     keyTerms.delete_many({})
 
 def addSampleRpts():
@@ -41,10 +41,15 @@ def testFind():
     #for report in reports:
     #    print(report)    
 
+
+
 if __name__ == "__main__":
-    emptyCollections()
-    addSampleRpts()
+    #emptyCollections()
+    #addSampleRpts()
     testFind()
+    results = get_frequent_keys()
+    for result in results:
+        print(result)
     #reports = rpts.find({"key_terms": {"$in": ["Zika"]}})
     #for report in reports:
     #    print(report)
