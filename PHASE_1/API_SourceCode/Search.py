@@ -3,6 +3,7 @@ import pymongo
 from datetime import datetime
 import time
 from database import *
+import re
 def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	'''
 	This function get requirements from users and return the Data that meets requirements
@@ -11,15 +12,19 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	#mydb = getdatabase()
 
 	keyterms = key_terms.split(",") # Split the key_terms string into list
-	output = [] # Create a list to store the output
-
+	output = {} # Create a list to store the output
+	output_dic = {}
+	if (re.match(r"(\d{4}-\d{1,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2})",start_date) is None) or (re.match(r"(\d{4}-\d{1,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2})",end_date) is None):
+  		raise ValueError("Date does not followed the format")
+	if checkdate(start_date,end_date,"start"):
+  		raise ValueError("Start date is later than End date")
 	if Timezone != "UTC":
 		start_date = Check_Timezone(start_date,Timezone)#Standardize time
 		end_date = Check_Timezone(end_date,Timezone)#Standardize time
 	print("Keyterms: ", keyterms)
 	for key in keyterms:
 		#Search_Frequentlykey_update_v1(key)
-		update_frequent_keys(key) # update key terms search history
+		update_frequent_keys(key)# update key terms search history
 
 		# place input parameters into a dict and pass to the database
 		params_dict = {
@@ -37,15 +42,18 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 		#						  {'$where': checkdate(obj.end_date,end_date,"end") == True},
 		#						  {'location':location}) # Find all the web_data that match the requirements
 
-		try:
-			for result in search_result:
-				print(result)
-		except:
-			print("Error encountered")
-			#if result['web_data'] not in output:
-			#	output[result['web_data']] = 1	
-			#else:
-			#	output[result['web_data']] = output[result['web_data']] + 1
+		#try:
+			#for result in search_result:
+				#print(result)
+		#except:
+			#print("Error encountered")
+		for result in search_result:
+			#print(result)
+			if result['_id'] not in output:
+				output[result['_id']] = 1
+				output_dic[result['_id']] = result	
+			else:
+				output[result['_id']] = output[result['_id']] + 1
 
 	# 	alternate simple method to pass key_terms to database, but would need other way to count the number of matching key terms
 	# 
@@ -62,7 +70,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	#
 
 	
-	#sorted_output = sorted(output.items(),key=lambda x: x[1],reverse=True)
+	sorted_output = sorted(output.items(),key=lambda x: x[1],reverse=True)
 	#record_search = {
 	#	"key_terms":key_terms,
 	#	"location":location,
@@ -71,7 +79,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	#	"Timezone":Timezone,
 	#	"search_time":time.time()
 	#}
-
+	
 	#modify_history(record_search)
 	#if "search_his" in mydb.list_collection_names():
 	#	mydb.search_his.insert(record_search)	# update search history
@@ -79,11 +87,17 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
     #	mydv["search_his"]
     #	mydb.search_his.insert(record_search)
 
-	#returnlist = []
+	returnlist = []
 	#for key in sorted_output:
 	#	returnlist.append(key)
-
-	return #{"output":returnlist} # [report_json] ?
+	#final_output = []
+	for key in sorted_output:
+		#print(key[0]
+		if output_dic[key[0]] != None:
+			returnlist.append(output_dic[key[0]])
+	#for key in output_dic.items():
+	#	print(key)
+	return {"output":returnlist} # [report_json] ?
 
 def Search_Frequently_key_v1():
 	'''	
@@ -153,6 +167,7 @@ def checkdate(time1,time2,check):
 		else:
 			return True
 if __name__ == '__main__':
-    print(search_v1("hi","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
+    print(search_v1("Zika,MERS,Anthrax","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
+    #print(search_v1("Zika","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
+    #print(search_v1("MERS","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
     # print(__name__)
-
