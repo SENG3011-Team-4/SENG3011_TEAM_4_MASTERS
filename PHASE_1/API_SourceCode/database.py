@@ -62,9 +62,9 @@ def write_report(reports):
 
 def get_reports(args):
     return rpts.find({
-        "key_terms": { "$in": args.key_terms }, 
-        "location": args.location,
-        "date": { "$gt": args.start_date, "$lt": args.end_date}
+        "key_terms": { "$in": args["key_terms"] },
+        "location": args["location"],
+        "date": { "$gt": args["start_date"], "$lt": args["end_date"]}
     })
 
 def get_frequent_keys():
