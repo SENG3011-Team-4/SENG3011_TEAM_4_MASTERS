@@ -4,8 +4,6 @@ from bs4 import BeautifulSoup
 def county_scraper():
     countries = []
 
-    id="facetapi-facet-search-apidefault-node-index-block-field-country"
-
     url = 'https://www.cidrap.umn.edu/news-perspective'
 
     data = requests.get(url)
