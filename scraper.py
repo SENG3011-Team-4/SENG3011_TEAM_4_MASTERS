@@ -12,9 +12,10 @@ web_data = []
 # Final possible page: 1481
 # First page starts at 0
 # For testing, using only 1 page for faster results
+# Scrape articles only
 page_num = 0
 while page_num != 1:
-    url = 'https://www.cidrap.umn.edu/news-perspective?page='+str(page_num)
+    url = 'https://www.cidrap.umn.edu/news-perspective?f%5B0%5D=type%3Ass_news&page='+str(page_num)
 
     data = requests.get(url)
     html = BeautifulSoup(data.text, 'html.parser')
