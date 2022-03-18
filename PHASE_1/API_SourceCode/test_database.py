@@ -36,9 +36,10 @@ def testFind():
         "start_date": "2015-05-02T12:12:12",
         "end_date": "2020-05-02T12:12:12",
     }
-    reports = get_reports(args)
-    for report in reports:
-        print(report)    
+    search_v1("Zika", args["location"], args["start_date"], args["end_date"])
+    #reports = get_reports(args)
+    #for report in reports:
+    #    print(report)    
 
 if __name__ == "__main__":
     emptyCollections()

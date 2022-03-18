@@ -22,7 +22,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 
 		# place input parameters into a dict and pass to the database
 		params_dict = {
-			"key_terms": key,
+			"key_terms": [key],
 			"location": location,
 			"start_date": start_date,
 			"end_date": end_date
@@ -36,8 +36,11 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 		#						  {'$where': checkdate(obj.end_date,end_date,"end") == True},
 		#						  {'location':location}) # Find all the web_data that match the requirements
 
-		for result in search_result:
-			print(result)
+		try:
+			for result in search_result:
+				print(result)
+		except:
+			print("Error encountered")
 			#if result['web_data'] not in output:
 			#	output[result['web_data']] = 1	
 			#else:
