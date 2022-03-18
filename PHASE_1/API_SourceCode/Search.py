@@ -20,9 +20,9 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
   		raise ValueError("Start date is later than End date")
 	if Timezone != "UTC":
 		start_date = Check_Timezone(start_date,Timezone) # Standardize time
-		#print("Standardised start date: ", start_date)
+		print("Standardised start date: ", start_date)
 		end_date = Check_Timezone(end_date,Timezone) # Standardize time
-		#print("Standardised end date: ", end_date)
+		print("Standardised end date: ", end_date)
 	print("Keyterms: ", keyterms)
 	for key in keyterms:
 		#Search_Frequentlykey_update_v1(key)
@@ -30,7 +30,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 
 		# place input parameters into a dict and pass to the database
 		params_dict = {
-			"key_terms": [key],
+			"key_term": key,
 			"location": location,
 			"start_date": start_date,
 			"end_date": end_date
@@ -154,7 +154,7 @@ def Check_Timezone(date,Timezone):
 	hrs = int(timezone_offset[1:3])
 	mins = int(timezone_offset[4:6])
 
-	#TODO add regex for timezone string
+	# TODO add regex for timezone string
 
 	date = datetime.strptime(date,"%Y-%m-%dT%H:%M:%S")
 	#print("Date before: ", date)
@@ -165,6 +165,7 @@ def Check_Timezone(date,Timezone):
 	elif timezone_offset[0] == "-":
 		date = date + timedelta(hours=hrs, minutes=mins)
 		#print(date)
+	date = str(date).replace(" ", "T")
 	return date
 
 
@@ -185,7 +186,7 @@ def checkdate(time1,time2,check):
 		else:
 			return True
 if __name__ == '__main__':
-    #print(search_v1("Zika,MERS,Anthrax","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
+    print(search_v1("Zika,MERS,Anthrax","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
     #print(search_v1("Zika","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
     #print(search_v1("MERS","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
     print(search_v1("Zika,MERS,Anthrax","Sydney","2015-05-02T15:12:12","2020-05-02T15:12:12","UTC+03:00"))

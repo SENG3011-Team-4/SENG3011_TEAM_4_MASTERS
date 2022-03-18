@@ -50,22 +50,62 @@ def write_report(reports):
 
     :param reports: list of dictionaries
     report = {
-        key_terms,
-        location,
-        date,
+        url,
+        date_of_publication,
+        headline,
+        main_text,
+        reports: {
+            diseases,
+            event_date,
+            locations
+        }
     }
-    :param param2: this is a second param
-    :returns: this is a description of what is returned
-    :raises keyError: raises an exception
+    :returns: report
     """
     rpts.insert_many(reports)
 
 def get_reports(args):
-    return rpts.find({
-        "key_terms": { "$in": args["key_terms"] },
-        "location": args["location"],
-        "date": { "$gt": args["start_date"], "$lt": args["end_date"]}
+    
+    # changed structure of reports as stored in database
+    #return rpts.find({
+    #    "headline": {"$regex": args["key_terms"]},
+    #    "main_text": {"$regex": args["key_terms"]},
+    #    "reports": {"$in": {"event_date": {"$gt": args["start_date"], "$lt": args["end_date"]}}}
+    #})
+
+    results = rpts.find({
+        "$or": [{"headline": {"$regex": args["key_term"], "$options": 'i'} }, 
+                {"main_text": {"$regex": args["key_term"], "$options": 'i'} }
+                ],
     })
+
+    article_list = []
+    date_flag = False
+    loc_flag = False
+
+    for result in results:
+        # check to see if the date and location in the article match the key terms
+        date_flag = False
+        loc_flag = False
+        for report in result["reports"]:
+            if report["event_date"][0] > args["start_date"] and report["event_date"][0] < args["end_date"]:
+                # only one date
+                date_flag = True
+            for location in report["locations"]:
+                # search through all possible locations
+                if location == args["location"]:
+                    loc_flag = True
+        # add the article to the list if the date and location match
+        if (date_flag and loc_flag):
+            article_list.append(result)
+
+    return article_list
+
+    #return rpts.find({
+    #    "key_terms": { "$in": args["key_terms"] },
+    #    "location": args["location"],
+    #    "date": { "$gt": args["start_date"], "$lt": args["end_date"]}
+    #})
 
 def get_frequent_keys():
     #return keyTerms.find({}).sort({"frequency": -1}).limit(5)
@@ -99,3 +139,62 @@ def modify_history(search_record):
     #    hist.insert_one(search_record)
     #else:
     #    hist.insert_one(search_record)
+"""
+if __name__ == '__main__':
+    rpts.delete_many({})
+    test_doc = {
+        "url": "www.example.com",
+        "date_of_publication": "Mar 15, 2022",
+        "headline": "Outbreaks expand to Wisconsin",
+        "main_text": "Avian Flu Zika sample text",
+        "reports": [{
+            "diseases": [
+            "RandoVirus"
+            ],
+            "event_date": [
+            "2015-10-01T08:45:10"
+            ],
+            "locations": ["United States"]
+        }]
+    }
+    rpts.insert_one(test_doc)
+
+    args = {
+        "key_term": "outbreak",
+        "location": "United States",
+        "start_date": "2015-05-02T12:12:12",
+        "end_date": "2020-05-02T12:12:12"
+    }
+
+    #results = rpts.find({})
+    #for result in results:
+    #   print(result)
+
+    results = rpts.find({
+        "$or": [{"headline": {"$regex": args["key_term"], "$options": 'i'} }, 
+                {"main_text": {"$regex": args["key_term"], "$options": 'i'} }
+                ],
+    })
+
+    article_list = []
+    date_flag = False
+    loc_flag = False
+
+    for result in results:
+        # check to see if the date and location in the article match the key terms
+        date_flag = False
+        loc_flag = False
+        for report in result["reports"]:
+            if report["event_date"][0] > args["start_date"] and report["event_date"][0] < args["end_date"]:
+                # only one date
+                date_flag = True
+            for location in report["locations"]:
+                # search through all possible locations
+                if location == args["location"]:
+                    loc_flag = True
+        # add the article to the list if the date and location match
+        if (date_flag and loc_flag):
+            article_list.append(result)
+
+    print(article_list)
+"""
