@@ -72,7 +72,7 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 	#
 
 	
-	#sorted_output = sorted(output.items(),key=lambda x: x[1],reverse=True)
+	sorted_output = sorted(output.items(),key=lambda x: x[1],reverse=True)
 	record_search = {
 		"key_terms":key_terms,
 		"location":location,
