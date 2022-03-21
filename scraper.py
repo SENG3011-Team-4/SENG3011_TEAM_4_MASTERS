@@ -1,13 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
-<<<<<<< HEAD
-import pycountry
-import json
-=======
 from country_scraper import county_scraper
 from datetime import datetime
->>>>>>> 604470c9ba383e818e145b209ccedb3d8ce613f7
+import json
 
 # CIDRAP doesn't have syndromes in articles -> need to input them manually
 f1 = open('syndrome_list.json')
