@@ -2,9 +2,13 @@ import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
 import pycountry
+import json
 
 # CIDRAP doesn't have syndromes in articles -> need to input them manually
-syndrome_list = ["Haemorrhagic Fever", "Acute Flacid Paralysis", "Acute gastroenteritis", "Acute respiratory syndrome", "Influenza-like illness", "Acute fever and rash", "Fever of unknown origin", "Encephalitis", "Meningitis"]
+f1 = open('syndrome_list.json')
+f2 = open('disease_list.json')
+syndrome_list = json.load(f1)
+disease_list = json.load(f2)
 
 web_data = []
 
@@ -101,3 +105,5 @@ while page_num != 1:
     page_num += 1        
 
 pprint(web_data)
+f1.close()
+f2.close()
