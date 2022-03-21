@@ -94,7 +94,8 @@ while page_num != 1:
             diseases = []
             for d in diseases_filed:
                 disease = d.select_one('.field-item.even a').text
-                diseases.append(disease)    
+                if disease.lower() in disease_list:
+                    diseases.append(disease)    
                 
             reports.append({"disease": diseases, "locations": locations})
             
