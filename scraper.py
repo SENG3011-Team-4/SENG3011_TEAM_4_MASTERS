@@ -1,8 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
+<<<<<<< HEAD
 import pycountry
 import json
+=======
+from country_scraper import county_scraper
+from datetime import datetime
+>>>>>>> 604470c9ba383e818e145b209ccedb3d8ce613f7
 
 # CIDRAP doesn't have syndromes in articles -> need to input them manually
 f1 = open('syndrome_list.json')
@@ -11,6 +16,24 @@ syndrome_list = json.load(f1)
 disease_list = json.load(f2)
 
 web_data = []
+
+countries = county_scraper()
+
+def month_to_num(mon):
+    return {
+        'Jan': '01',
+        'Feb': '02',
+        'Mar': '03',
+        'Apr': '04',
+        'May': '05',
+        'Jun': '06',
+        'Jul': '07',
+        'Aug': '08',
+        'Sep': '09',
+        'Oct': '10',
+        'Nov': '11',
+        'Dec': '12'
+    }[mon]
 
 # Scraping first 10 pages
 # Final possible page: 1481
@@ -33,7 +56,13 @@ while page_num != 1:
             
             reports = []
             
+            # fetching and formatting date
             date = sub.select_one('.date-display-single').text
+            date = date.split()
+            date[1] = date[1].replace(",","")
+            date[0] = month_to_num(date[0])
+            date = date[2]+"-"+date[0]+"-"+date[1]+"T:00:00:00"
+            
             art_url = "http://cidrap.umn.edu"+ sub.select_one('.node-title.fieldlayout.node-field-title a')['href']  
             
             # Opening article to be scraped
@@ -53,22 +82,11 @@ while page_num != 1:
                 # United States written as US in most articles
                 if "US" in p:
                     if "United States" not in locations:
-                        locations.append("United States")
-                # Korea written as Republic of Korea in pycountry        
-                if "South Korea" in p:
-                    if "South Korea" not in locations:
-                        locations.append("South Korea")        
-                if "North Korea" in p:
-                    if "North Korea" not in locations:
-                        locations.append("North Korea")
-                # Vietnam written as Viet Nam in pycountry
-                if "Vietnam" in p:
-                    if "Vietnam" not in locations:
-                        locations.append("Vietnam")                
-                for c in pycountry.countries:
-                    if c.name in p:
-                        if c.name not in locations:
-                            locations.append(c.name)             
+                        locations.append("United States")              
+                for c in countries:
+                    if c in p:
+                        if c not in locations:
+                            locations.append(c)             
                         
             
             #event date
@@ -86,19 +104,8 @@ while page_num != 1:
             
             
             # Main texts -> scraping text under url link for articles
-            try:
-                main_text = sub.select_one('.field-item.even p').text   
-            except AttributeError:
-                bullet_pts = sub.select_one('div.field.field-name-field-bullet-points.field-type-text.field-label-hidden')
-                main_text = []
-                for t in bullet_pts.select('.field-item.even'):
-                    t = t.text
-                    main_text.append(t)
-                for t in bullet_pts.select('.field-item.odd'):
-                    t = t.text
-                    main_text.append(t)    
-                  
-            
+            main_text = sub.select_one('.field-item.even p').text   
+                      
             headline = sub.select_one('.node-title.fieldlayout.node-field-title a').text                      
             web_data.append({"url": art_url, "date_of_publication": date, "headline": headline, "main_text": main_text, "report": reports})
             
