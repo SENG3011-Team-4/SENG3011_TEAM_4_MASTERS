@@ -25,6 +25,32 @@ for c in cities_list:
 
 web_data = []
 
+
+# Some diseases have multiple syndromes
+def identify_syndrome(disease_list):
+    syndromes = []
+    for d in disease_list:
+        if d == "malaria" or d == "measles" or d == "rabies" or d == "poliomyelitis" or d == "zika" or d == "west nile virus" or d == "chikungunya" or d == "enterovirus 71 infection":
+            syndromes.append("Encephalitis") 
+        if "influenza" in d:
+            syndromes.append("Influenza-like illness")    
+        if d == "sars" or d == "COVID-19" or d == "pneumococcus pneumonia":
+            syndromes.append("Acute respiratory syndrome")   
+        if d == "poliomyelitis" or d == "botulism" or d == "west nile virus" or d == "diphtheria":
+            syndromes.append("Acute Flaccid Paralysis")
+        if d == "cryptococcosis" or d == "tuberculosis" or d == "poliomyelitis" or d == "hiv/aids" or d == "enterovirus 71 infection" or d == "varicella" or d == "mumps":
+            syndromes.append("Meningitis")    
+        if "haemorrhagic fever" in d or d == "chikungunya" or d == "lassa fever" or d == "rift valley fever" or d == "marburg virus disease" or d == "hantavirus" or d == "dengue" or d == "yellow fever":
+            syndromes.append("Haemorrhagic Fever") 
+        if d == "rotavirus infection" or d == "norovirus infection" or d == "salmonellosis" or d == "shigellosis" or d == "cholera":
+            syndromes.append("Acute gastroenteritis")
+        if "heptatitis" in d or d == "rubella" or d == "dengue" or d == "ehec (e.coli)" or d == "shigellosis" or d == "rubella" or d == "varicella":
+            syndromes.append("Acute fever and rash")       
+    syndromes = list(set(syndromes))        
+    return syndromes        
+                           
+                
+
 def month_to_num(mon):
     return {
         'Jan': '01',
@@ -156,7 +182,8 @@ while page_num != 1:
                 if disease.lower() in disease_list:
                     diseases.append(disease)    
                 
-            reports.append({"disease": diseases, "locations": locations})
+            syndromes = identify_syndrome(diseases)    
+            reports.append({"disease": diseases, "syndrome": syndromes, "locations": locations})
             
             
             
