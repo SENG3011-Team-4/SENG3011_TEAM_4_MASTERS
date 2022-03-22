@@ -108,7 +108,12 @@ def update_frequent_keys(key):
 def get_history():
     return hist.find({}).sort("search_time", pymongo.ASCENDING).sort( "time", pymongo.DESCENDING ).limit(5)
 
-def modify_history(search_record):
+def modify_history(search_record,token):
+	#TODO
+	#should change db format from list of dic to      dic of list of dic,
+	
+	
+	
     # not sure if searching a database starts is FIFO or LIFO, need to double check in testing
     hist.insert_one({
 		    "his": search_record, 
