@@ -1,3 +1,4 @@
+from dis import dis
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
@@ -8,12 +9,21 @@ import json
 # CIDRAP doesn't have syndromes in articles -> need to input them manually
 f1 = open('syndrome_list.json')
 f2 = open('disease_list.json')
+f3 = open('world-cities_json.json')
 syndrome_list = json.load(f1)
 disease_list = json.load(f2)
-
-web_data = []
+cities_list = json.load(f3)
 
 countries = county_scraper()
+
+# Getting cities from JSON file
+# Excluding cities from countries not in countries list
+cities = []
+for c in cities_list:
+    if c['country'] in countries:
+        cities.append(c['name'])
+
+web_data = []
 
 def month_to_num(mon):
     return {
@@ -116,17 +126,23 @@ while page_num != 1:
             
             # TODO Fix up location -> some countries not included + add cities
             locations = []
+            country = []
+            city = []
             for p in art_para:
                 p = p.text
                 # United States written as US in most articles
                 if "US" in p:
-                    if "United States" not in locations:
-                        locations.append("United States")              
+                    if "United States" not in country:
+                        country.append("United States")              
                 for c in countries:
                     if c in p:
-                        if c not in locations:
-                            locations.append(c)             
-                        
+                        if c not in country:
+                            country.append(c)
+                for c in cities:
+                    if c in p:
+                        if c not in city:
+                            city.append(c)                         
+            locations.append({"country": country, "cities": city})        
             
             #event date
             #syndrome
@@ -143,6 +159,7 @@ while page_num != 1:
             reports.append({"disease": diseases, "locations": locations})
             
             
+            
             # Main texts -> scraping text under url link for articles
             main_text = sub.select_one('.field-item.even p').text   
                       
@@ -154,3 +171,4 @@ while page_num != 1:
 pprint(web_data)
 f1.close()
 f2.close()
+f3.close()
