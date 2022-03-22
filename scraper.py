@@ -31,6 +31,49 @@ def month_to_num(mon):
         'Dec': '12'
     }[mon]
 
+def disease_shorthand(disease):
+    match disease:
+        case "anthrax":
+            return "anthrax cutaneous" # Theres 3 different anthrax diseases idk how to differentiate
+        case "Avian Influenza (Bird Flu)":
+            return "influenza a/h5n1" # Theres 8 different bird flus
+        case "E coli":
+            return "ehec (e.coli)"
+        case "Ebola":
+            return "ebola haemorrhagic fever"
+        case "Enterovirus, Non-Polio":
+            return "enterovirus 71 infection" # Enterovirus is more an umbrella disease
+        case "Food-and-Mouth Disease":
+            return "hand, foot and mouth disease"
+        case "H1N1 2009 Pandemic Influenza":
+            return "influenza a/h1n1"
+        case "H3N2v Influenza":
+            return "influenza a/h3n2"
+        case "H7N9 Avian Influenza":
+            return "influenza a/h7n9"
+        case "Influenza, General":
+            return "influenza"
+        case "Legionella":
+            return "legionares"
+        case "Listeria":
+            return "listeriosis"
+        case "Marburg":
+            return "marburg virus disease"
+        case "Norovirus":
+            return "norovirus infection"
+        case "Pneumonia":
+            return "pneumococcus pneumonia" # Technically ranges from ear to lungs whereas regular pneumonia is particular to lungs
+        case "Polio":
+            return "poliomyelitis"
+        case "Rotavirus":
+            return "rotavirus infection"
+        case "Salmonella":
+            return "salmonellosis"
+        case "West Nile":
+            return "west nile virus"
+        case _:
+            return disease
+
 # Scraping first 10 pages
 # Final possible page: 1481
 # First page starts at 0
@@ -93,7 +136,7 @@ while page_num != 1:
             diseases_filed = filed_under.select('div.field-items')
             diseases = []
             for d in diseases_filed:
-                disease = d.select_one('.field-item.even a').text
+                disease = disease_shorthand(d.select_one('.field-item.even a').text)
                 if disease.lower() in disease_list:
                     diseases.append(disease)    
                 
