@@ -87,3 +87,4 @@ def auth_logout_v1(token):
         is_success = True
 
     return {'is_success': is_success}
+    
