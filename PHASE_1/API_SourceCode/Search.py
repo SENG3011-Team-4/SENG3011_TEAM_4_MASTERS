@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import time
 from database import *
 import re
-def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
+def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC",token):
 	'''
 	This function get requirements from users and return the Data that meets requirements
 	Also those requirements will stored into search_his database
@@ -85,8 +85,8 @@ def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC"):
 		"Timezone":Timezone,
 		"search_time":time.time()
 	}
-	
-	modify_history(record_search)
+	if token != None:
+		modify_history(record_search,token)
 	#if "search_his" in mydb.list_collection_names():
 	#	mydb.search_his.insert(record_search)	# update search history
 	#else:
@@ -140,7 +140,7 @@ def Search_Frequentlykey_update_v1(keys):
 		mydb.history.insert({'key':keys,'frequence':1})
     
 	return {'is_success': True}
-def Search_History_v1():
+def Search_History_v1(token):
 	'''
 	Records the last five searches
 	'''
@@ -153,7 +153,7 @@ def Search_History_v1():
     #	output.append(his) 
     
     #return {"records":output}#return a list of dic
-	results = get_history()
+	results = get_history(token)
 	output = []
 	for result in results:
 		del result['_id']

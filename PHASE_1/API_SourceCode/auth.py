@@ -26,7 +26,7 @@ def auth_register_v1(username, email, password):
 	# store info of this user
 	uid = len(existing_emails) + 1
 
-
+	password = hashlib.sha256(password.encode()).hexdigest()#encode password
 	token = jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256')
 	record_user = {
 		"usernamd":username,
@@ -56,7 +56,7 @@ def auth_login_v1(email, password):
 	if login_info == None:
 		raise InputError(description='The email is not registered')
 
-
+	password = hashlib.sha256(password.encode()).hexdigest()
 	# incorrect password
 	if (login_info["password"] != password):
 		raise InputError(description='The password entered is incorrect')
@@ -83,7 +83,7 @@ def auth_logout_v1(token):
     if check_session_by_token is None:
         raise AccessError(description='invalid token')
     else:
-        #delete this user from session db
+        delete_session(token)
         is_success = True
 
     return {'is_success': is_success}

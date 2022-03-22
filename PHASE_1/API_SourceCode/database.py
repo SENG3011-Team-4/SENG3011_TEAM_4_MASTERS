@@ -11,7 +11,8 @@ rpts.insert_many(web_data)
 
 hist = db["History"]
 keyTerms = db["KeyTerms"]
-
+User = db["User"]
+Session = db["Session"]
 """
 # ==== WRITING DATA ====
 
@@ -47,7 +48,18 @@ results = rpts.find({})
 # examples are https://docs.mongodb.com/manual/reference/operator/update/
 results = rpts.update_many({"field": blyat}, {"$set":{"name": "tim"}})
 """
-
+def find_user_by_email(email):
+	return User.find_one({"email":email})
+def registed_user(user_data):
+	User.insert_one(user_data)
+	return
+def Session_update(session_data);
+	Session.insert_one(session_data)
+	return
+def check_session_by_token(token):
+	return Session.find_one({"token":token})
+def delete_session(token):
+	#TODO
 def write_report(reports):
     """
     Writes a disease report to the reports collection
@@ -66,12 +78,14 @@ def write_report(reports):
     return
 
 def get_reports(args):
-
+	#TODO
+	# check if args[key-terms] in desease[], not in headlin or main_text
+	#
 	results = rpts.find({
 		"$or": [{"headline": {"$regex": args["key_terms"], "$options": 'i'} }#, 
 				#{"main_text": {"$regex": args["key_terms"], "$options": 'i'} }
 			]},
-			{"reports":{"$elemMatch":{"locations":{"$elemMatch'":{ "$regex": args["location"] }}}}}
+			#{"reports":{"$elemMatch":{"locations":{"$elemMatch'":{ "$regex": args["location"] }}}}}
 		 #{"reports":{"$elemMatch":{"event_date":{"$elemMatch":{"$gt": args["start_date"], "$lt": args["end_date"]}}}}}      
 		#{"reports":{"event_date":{"$gt": "2015-05-02T12:12:12", "$lt": "2020-05-02T12:12:12"}}}
 		)
