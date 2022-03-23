@@ -66,12 +66,14 @@ def registed_user(user_data):
 	User.insert_one(user_data)
 	return
 def Session_update(session_data):
-	Session.insert_one(session_data)
+	if(Session.find_one({"u_id":session_data["u_id"]}) is None):
+		Session.insert_one(session_data)
 	return
 def check_session_by_token(token):
 	return Session.find_one({"token":token})
 def user_list():
 	return User.find()
+def delete_session(token):
 
 	Session.delete_one({"token":token})
 	return
@@ -150,3 +152,4 @@ def modify_history(search_record,token):
     #    hist.insert_one(search_record)
     #else:
     #    hist.insert_one(search_record)
+

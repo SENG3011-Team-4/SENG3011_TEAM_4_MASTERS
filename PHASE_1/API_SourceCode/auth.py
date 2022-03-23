@@ -55,7 +55,7 @@ def auth_register_v1(username, email, password):
 
 		"token":token
 	}
-	Session_update(Session_user)
+	#Session_update(Session_user)
 	return {
 	'token': token,
 
