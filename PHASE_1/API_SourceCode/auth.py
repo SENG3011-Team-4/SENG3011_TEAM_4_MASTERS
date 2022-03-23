@@ -1,8 +1,12 @@
 from database import *
 import re
+import hashlib
+
+
 class InputError(HTTPException):
 	code = 400
 	message = 'Input Error'
+	
 def auth_register_v1(username, email, password):
 
 	# check if email is valid
@@ -12,8 +16,8 @@ def auth_register_v1(username, email, password):
 	# check if the email is used by another user
 	find_user_by_email(email)
 	if find_user_by_email(email) != None:
-	raise InputError(
-	    description='This email is associated with another account')
+		raise InputError(
+			description='This email is associated with another account')
 
 	# check invalid password
 	if (len(password) < 8):
@@ -28,6 +32,7 @@ def auth_register_v1(username, email, password):
 
 	password = hashlib.sha256(password.encode()).hexdigest()#encode password
 	token = jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256')
+
 	record_user = {
 		"usernamd":username,
 		"email":email,
@@ -35,15 +40,16 @@ def auth_register_v1(username, email, password):
 		"u_id":u_id
 	}
 	registed_user(record_user)
+
 	Session_user = {
-		"u_id":u_id
+		"u_id":uid,
 		"token":token
 	}
 	Session_update(Session_user)
 	return {
 	'token': token,
 	'uid': uid
-	    }
+	}
 def auth_login_v1(email, password):
 
 	# connect to database
@@ -65,7 +71,7 @@ def auth_login_v1(email, password):
 	token = jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256')
 	
 	Session_user = {
-		"u_id":u_id
+		"u_id":uid,
 		"token":token
 	}
 	Session_update(Session_user)

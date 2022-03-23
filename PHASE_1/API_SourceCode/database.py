@@ -60,6 +60,8 @@ def check_session_by_token(token):
 	return Session.find_one({"token":token})
 def delete_session(token):
 	#TODO
+    pass
+
 def write_report(reports):
     """
     Writes a disease report to the reports collection
