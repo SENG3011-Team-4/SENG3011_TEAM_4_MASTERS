@@ -1,18 +1,30 @@
 import pymongo
 from pymongo import MongoClient
-from scraper import web_data
+#from scraper import web_data
 import time
+import os.path
 # Accessing database from the cloud
+
 cluster = MongoClient("mongodb+srv://team4masters:uXTbGOYCXJTwTlIN@cluster0.d2xyd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 db = cluster["API-Database"]
 
 rpts = db["Reports"]
-rpts.insert_many(web_data)
+rpts.drop()
+#rpts.insert_many(web_data)
 
 hist = db["History"]
+
 keyTerms = db["KeyTerms"]
+
 User = db["User"]
+
 Session = db["Session"]
+
+def clear():
+	User.drop()
+	Session.drop()
+	return 
+	
 """
 # ==== WRITING DATA ====
 
@@ -53,13 +65,16 @@ def find_user_by_email(email):
 def registed_user(user_data):
 	User.insert_one(user_data)
 	return
-def Session_update(session_data);
+def Session_update(session_data):
 	Session.insert_one(session_data)
 	return
 def check_session_by_token(token):
 	return Session.find_one({"token":token})
+def user_list():
+	return User.find()
 def delete_session(token):
-	#TODO
+	Session.delete_one({"token":token})
+	return
 def write_report(reports):
     """
     Writes a disease report to the reports collection

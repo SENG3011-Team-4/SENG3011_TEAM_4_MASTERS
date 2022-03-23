@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import time
 from database import *
 import re
+import os.path
 def search_v1(key_terms,location,start_date,end_date,Timezone = "UTC",token = None):
 	'''
 	This function get requirements from users and return the Data that meets requirements
