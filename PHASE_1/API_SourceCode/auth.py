@@ -1,6 +1,7 @@
 from database import *
 from werkzeug.exceptions import HTTPException
 import re
+import hashlib
 import jwt
 import hashlib
 import os.path
@@ -12,14 +13,18 @@ class InputError(HTTPException):
 class AccessError(HTTPException):
 	code = 403
 	message = 'Access Error'
+
+
 def auth_register_v1(username, email, password):
 
 	# check if email is valid
 	if not(re.search('^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$', email)):
 		raise InputError(description='Invalid email address')# check if the email is used by another user
 	if find_user_by_email(email) != None:
+
 		raise InputError(description='This email is associated with another account')
     # check invalid password
+
 	if (len(password) < 8):
 		raise InputError(description='Length of password too short')
 
@@ -35,6 +40,7 @@ def auth_register_v1(username, email, password):
 
 	password = hashlib.sha256(password.encode()).hexdigest()#encode password
 	token = jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256')
+
 	record_user = {
 		"usernamd":username,
 		"email":email,
@@ -42,15 +48,20 @@ def auth_register_v1(username, email, password):
 		"u_id":u_id
 	}
 	registed_user(record_user)
+
 	Session_user = {
+
 		"u_id":u_id,
+
 		"token":token
 	}
 	Session_update(Session_user)
 	return {
 	'token': token,
+
 	'uid': u_id
 	    }
+
 def auth_login_v1(email, password):
 
 	# connect to database
@@ -72,7 +83,9 @@ def auth_login_v1(email, password):
 	token = jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256')
 	
 	Session_user = {
+
 		"u_id":u_id,
+
 		"token":token
 	}
 	Session_update(Session_user)

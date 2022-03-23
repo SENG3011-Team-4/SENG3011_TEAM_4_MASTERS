@@ -72,9 +72,10 @@ def check_session_by_token(token):
 	return Session.find_one({"token":token})
 def user_list():
 	return User.find()
-def delete_session(token):
+
 	Session.delete_one({"token":token})
 	return
+
 def write_report(reports):
     """
     Writes a disease report to the reports collection
