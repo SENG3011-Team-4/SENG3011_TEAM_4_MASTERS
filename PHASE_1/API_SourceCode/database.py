@@ -52,6 +52,29 @@ def delete_session(token):
     pass
 # ===================================================
 
+def clearAll():
+    rpts.delete_many({})
+    hist.delete_many({})
+    keyTerms.delete_many({})
+    User.delete_many({})
+    Session.delete_many({})
+
+def toggleTests(testMode):
+    # switch database to testing database to not interfere with any existing data upon deployment
+    if testMode:
+        db = cluster["Test-Database"]
+    else:
+        db = cluster["API-Database"]
+    global rpts
+    rpts = db["Reports"]
+    global hist
+    hist = db["History"]
+    global keyTerms
+    keyTerms = db["KeyTerms"]
+    global User
+    User = db["User"]
+    global Session
+    Session = db["Session"]
 
 def write_report(reports):
     # TODO: enforce the structure of the report to match the spec, example json is below
@@ -109,7 +132,7 @@ def get_frequent_keys():
 
 def update_frequent_keys(key):
     # TODO: enforce data integrity
-    # keys in this database should have the structure:
+    # === DATA STRUCTURE ===
     # key_example: {
     #   "key": string,
     #   "frequency": int
