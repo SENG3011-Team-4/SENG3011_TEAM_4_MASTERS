@@ -1,13 +1,18 @@
 import pymongo
 from pymongo import MongoClient
-
+from scraper import web_data
+import time
 # Accessing database from the cloud
 cluster = MongoClient("mongodb+srv://team4masters:uXTbGOYCXJTwTlIN@cluster0.d2xyd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 db = cluster["API-Database"]
+
 rpts = db["Reports"]
+rpts.insert_many(web_data)
+
 hist = db["History"]
 keyTerms = db["KeyTerms"]
-
+User = db["User"]
+Session = db["Session"]
 """
 # ==== WRITING DATA ====
 
@@ -43,6 +48,19 @@ results = rpts.find({})
 # examples are https://docs.mongodb.com/manual/reference/operator/update/
 results = rpts.update_many({"field": blyat}, {"$set":{"name": "tim"}})
 """
+def find_user_by_email(email):
+	return User.find_one({"email":email})
+def registed_user(user_data):
+	User.insert_one(user_data)
+	return
+def Session_update(session_data);
+	Session.insert_one(session_data)
+	return
+def check_session_by_token(token):
+	return Session.find_one({"token":token})
+def delete_session(token):
+	#TODO
+    pass
 
 def write_report(reports):
     """
@@ -63,8 +81,10 @@ def write_report(reports):
     :returns: report
     """
     rpts.insert_many(reports)
+    return
 
 def get_reports(args):
+<<<<<<< HEAD
     
     # changed structure of reports as stored in database
     #return rpts.find({
@@ -78,6 +98,20 @@ def get_reports(args):
                 {"main_text": {"$regex": args["key_term"], "$options": 'i'} }
                 ],
     })
+=======
+	#TODO
+	# check if args[key-terms] in desease[], not in headlin or main_text
+	#
+	results = rpts.find({
+		"$or": [{"headline": {"$regex": args["key_terms"], "$options": 'i'} }#, 
+				#{"main_text": {"$regex": args["key_terms"], "$options": 'i'} }
+			]},
+			#{"reports":{"$elemMatch":{"locations":{"$elemMatch'":{ "$regex": args["location"] }}}}}
+		 #{"reports":{"$elemMatch":{"event_date":{"$elemMatch":{"$gt": args["start_date"], "$lt": args["end_date"]}}}}}      
+		#{"reports":{"event_date":{"$gt": "2015-05-02T12:12:12", "$lt": "2020-05-02T12:12:12"}}}
+		)
+	return results
+>>>>>>> submain
 
     article_list = []
     date_flag = False
@@ -112,21 +146,32 @@ def get_frequent_keys():
     return keyTerms.find().sort("key", pymongo.ASCENDING).sort( "frequency", pymongo.DESCENDING ).limit(5)
 
 def update_frequent_keys(key):
-    keys = keyTerms.find_one({"key": key})
-    if keys != None:
-        keyTerms.update_one({"key": key}, {"$inc": {"frequency":1}})
-    else:
-        keyTerms.insert_one({
-            "key": key, 
-            "frequency": 1
-        })
-
+	keys = keyTerms.find_one({"key": key})
+	if keys != None:
+		keyTerms.update_one({"key": key}, {"$inc": {"frequency":1}})
+	else:
+		keyTerms.insert_one({
+		    "key": key, 
+		    "frequency": 1
+		})
+	return
 def get_history():
-    return hist.find({}).sort("search_time", pymongo.ASCENDING).limit(5)
+    return hist.find({}).sort("search_time", pymongo.ASCENDING).sort( "time", pymongo.DESCENDING ).limit(5)
 
-def modify_history(search_record):
+def modify_history(search_record,token):
+	#TODO
+	#should change db format from list of dic to      dic of list of dic,
+	
+	
+	
     # not sure if searching a database starts is FIFO or LIFO, need to double check in testing
-    hist.insert_one(search_record)
+    hist.insert_one({
+		    "his": search_record, 
+		    "time": time.time()
+		})
+    
+    
+    (search_record)
 
     
     #if history.len() > 5:
@@ -139,6 +184,7 @@ def modify_history(search_record):
     #    hist.insert_one(search_record)
     #else:
     #    hist.insert_one(search_record)
+<<<<<<< HEAD
 """
 if __name__ == '__main__':
     rpts.delete_many({})
@@ -198,3 +244,5 @@ if __name__ == '__main__':
 
     print(article_list)
 """
+=======
+>>>>>>> submain

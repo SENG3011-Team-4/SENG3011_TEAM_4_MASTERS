@@ -6,7 +6,7 @@ resources.
 from typing import List, Optional
 from fastapi import Body, FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field
-
+from Search import *
 ### BASE INPUT AND RESPONSE MODELS
 class SignUpInfo(BaseModel):
     """
@@ -34,7 +34,7 @@ class SearchItem(BaseModel):
     end_date: str
     timezone: Optional[str] = None
     # To be used for account logging
-    account_id: Optional[str] = None
+    #account_id: Optional[str] = None
 
 class Report(BaseModel):
     """
@@ -167,8 +167,8 @@ async def healtchcheck():
 
 @app.get(
     '/search',
-    response_model = ArticleJson,
-    responses = search_responses
+    #response_model = ArticleJson,
+    #responses = search_responses
 )
 async def search(
     keyterms: str = Query(None, description='Input ASCII string collection of diseases e.g. "Zika,Coronavirus"'),
@@ -176,22 +176,22 @@ async def search(
     start_date: str = Query(None, description='Start date format yyyy-MM-ddTHH:mm:ss e.g. "2015-10-01T08:45:10"'),
     end_date: str = Query(None, description='End date format yyyy-MM-ddTHH:mm:ss e.g. "2015-11-01T19:37:12"'),
     timezone: Optional[str] = Query(None, description='(OPTIONAL) Timezone format as UTC+HH e.g. UTC+12)'),
-    account_id: Optional[str] = Query(None, description='(OPTIONAL) Email of user e.g. user@gmail.com')
+    #account_id: Optional[str] = Query(None, description='(OPTIONAL) Email of user e.g. user@gmail.com')
 ):
     # Add to search metrics
     # Pass hardcoded value if passes all correct values
-    if not (all(ord(char) < 128 for char in keyterms) and (' ' not in keyterms)):
+    if not (all(ord(char) < 128 for char in keyterms) ):
         raise HTTPException(status_code=400, detail="Parameter validation has failed")
-    if not (isinstance(geoname_location_id, int)):
-        raise HTTPException(status_code=400, detail="Parameter validation has failed")
+    #if not (isinstance(geoname_location_id, int)):
+    #    raise HTTPException(status_code=400, detail="Parameter validation has failed")
     # Error checking dates and geoname_location_id
     data = search_v1(keyterms,location,start_date,end_date,timezone)
-    return {data}
+    return {"data":data}
    # raise HTTPException(status_code=404, detail="Endpoint not active")
 
 @app.get(
     '/search/key_frequency',
-    response_model = SearchHistory
+    #response_model = SearchHistory
 )
 async def key_frequency():
     # Obtain most frequently searched keys in DB
@@ -200,7 +200,7 @@ async def key_frequency():
 
 @app.get(
     '/search/history',
-    response_model =  SearchHistory
+    #response_model =  SearchHistory
 )
 async def search_history():
     # Right now it is to get the global search history
