@@ -55,7 +55,7 @@ def auth_register_v1(username, email, password):
 
 		"token":token
 	}
-	#Session_update(Session_user)
+	Session_update(Session_user)
 	return {
 	'token': token,
 
@@ -83,12 +83,11 @@ def auth_login_v1(email, password):
 	token = jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256')
 	
 	Session_user = {
-
 		"u_id":u_id,
 
 		"token":token
 	}
-	Session_update(Session_user)
+	#Session_update(Session_user)
 	return {
 	'token': token,
 	'uid': u_id
