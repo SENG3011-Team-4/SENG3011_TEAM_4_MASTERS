@@ -87,7 +87,7 @@ def auth_login_v1(email, password):
 
 		"token":token
 	}
-	#Session_update(Session_user)
+	Session_update(Session_user)
 	return {
 	'token': token,
 	'uid': u_id

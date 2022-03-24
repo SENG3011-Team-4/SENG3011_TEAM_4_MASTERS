@@ -1,6 +1,6 @@
 import pymongo
 from pymongo import MongoClient
-from scraper import web_data
+#from scraper import web_data
 import time
 
 # TODO:
@@ -17,7 +17,7 @@ db = cluster["API-Database"]
 
 # reports collection handles all the article jsons, taking input from scraper and sending output to API calls
 rpts = db["Reports"]
-rpts.insert_many(web_data)
+#rpts.insert_many(web_data)
 
 # history collection records all interactions with the database to provide the user with data on what has been most recently searched for
 hist = db["History"]
@@ -71,7 +71,7 @@ def toggleTests(testMode):
         db = cluster["API-Database"]
     global rpts
     rpts = db["Reports"]
-    rpts.insert_many(web_data)
+
     global hist
     hist = db["History"]
     global keyTerms
@@ -121,9 +121,8 @@ def get_reports(args):
     # Search to find whether any of the key terms exist within the headline, main text of article or diseases in reports
     # Then check whether the reports have locations and dates matching the specified date and location of the search
 	results = rpts.find(
-                {"reports":{"$elemMatch":{"diseases":{"$elemMatch'":{ "$regex": args["key_terms"] }}}}},
-			
-		 {"reports":{"$elemMatch":{"event_date":{"$elemMatch":{"$gt": args["start_date"], "$lt": args["end_date"]}}}}}      
+                {"reports":{"$elemMatch":{"diseases":{"$elemMatch":{ "$regex": args["key_terms"] }}}}},
+			#{"date_of_publication":{"$gt": args["start_date"], "$lt": args["end_date"]}}      
 		#{"reports":{"event_date":{"$gt": "2015-05-02T12:12:12", "$lt": "2020-05-02T12:12:12"}}}
 		)
 	return results
@@ -149,8 +148,8 @@ def update_frequent_keys(key):
 		})
 	return
 
-def get_history():
-    return hist.find({}).sort("search_time", pymongo.ASCENDING).sort( "time", pymongo.DESCENDING ).limit(5)
+def get_history(token):
+    return hist.find({"token":token}).sort( "time", pymongo.DESCENDING ).limit(5)
 
 def modify_history(search_record,token):
 	# TODO
@@ -161,6 +160,7 @@ def modify_history(search_record,token):
     # not sure if searching a database starts is FIFO or LIFO, need to double check in testing
     hist.insert_one({
 		    "his": search_record, 
+		    "token":token,
 		    "time": time.time()
 		})
     

@@ -131,14 +131,7 @@ def Search_Frequentlykey_update_v1(keys):
 	once have new search history, update the frequently key
 	'''
     #data = select key,frequence from history where key = keys
-	mydb = getdatabase()
-    
-	key_his = mydb.history.find_one({'key':keys})
-    
-	if key_his != None:
-		mydb.history.update_one({'key':keys},{'$inc':{'frequence':1}})
-	else:
-		mydb.history.insert({'key':keys,'frequence':1})
+	update_frequent_keys(keys)
     
 	return {'is_success': True}
 def Search_History_v1(token):
@@ -190,7 +183,8 @@ def checkdate(time1,time2,check):
 	time_1 = datetime.strptime(time1, date_format)
 	time_2 = datetime.strptime(time2, date_format)
 	diff = time_1-time_2
-	if diff.seconds > 0:
+	#print (diff.days)
+	if diff.days > 0:
 		if check == "start":
 			return True
 		else:
@@ -201,12 +195,4 @@ def checkdate(time1,time2,check):
 		else:
 			return True
 if __name__ == '__main__':
-    #print(search_v1("Zika,MERS,Anthrax","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
-    #print(search_v1("Zika","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
-    #print(search_v1("MERS","Sydney","2015-05-02T12:12:12","2020-05-02T12:12:12"))
-    print("#######################################################################")
-    print(search_v1("Polio","United States","2015-05-02T15:12:12","2025-05-02T15:12:12","UTC"))
-    #print(Search_Frequently_key_v1())
-    #print(Search_History_v1())
-    # print(__name__)
-    #Check_Timezone("2020-05-02T12:12:12", "UTC+01:15")
+	print (checkdate("2015-10-01T08:45:10","2016-10-01T08:45:10","start"))
