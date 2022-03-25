@@ -69,16 +69,16 @@ def month_to_num(mon):
 
 def disease_shorthand(disease):
     match disease:
-        case "anthrax":
-            return "anthrax cutaneous" # Theres 3 different anthrax diseases idk how to differentiate
         case "Avian Influenza (Bird Flu)":
-            return "influenza a/h5n1" # Theres 8 different bird flus
+            return "avian influenza" # Theres 8 different bird flus, might need a function to scrape the body of text for any strains mentioned
+        case "BSE":
+            return "mad cow disease"
         case "E coli":
             return "ehec (e.coli)"
         case "Ebola":
             return "ebola haemorrhagic fever"
         case "Enterovirus, Non-Polio":
-            return "enterovirus 71 infection" # Enterovirus is more an umbrella disease
+            return "enterovirus"
         case "Food-and-Mouth Disease":
             return "hand, foot and mouth disease"
         case "H1N1 2009 Pandemic Influenza":
@@ -97,14 +97,18 @@ def disease_shorthand(disease):
             return "marburg virus disease"
         case "Norovirus":
             return "norovirus infection"
-        case "Pneumonia":
-            return "pneumococcus pneumonia" # Technically ranges from ear to lungs whereas regular pneumonia is particular to lungs
+        case "Pandemic Influenza":
+            return "influenza"
         case "Polio":
             return "poliomyelitis"
         case "Rotavirus":
             return "rotavirus infection"
         case "Salmonella":
             return "salmonellosis"
+        case "Swine Influenza":
+            return "influenza a/h1n1"
+        case "VHF":
+            return "hemorrhagic fever"
         case "West Nile":
             return "west nile virus"
         case _:
