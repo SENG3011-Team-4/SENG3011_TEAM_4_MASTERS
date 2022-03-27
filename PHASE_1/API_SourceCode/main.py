@@ -4,9 +4,10 @@ resources.
 """
 
 from typing import List, Optional
-from fastapi import Body, FastAPI, HTTPException, Query
-from pydantic import BaseModel, Field
-from Search import *
+from fastapi import FastAPI, HTTPException, Query
+from pydantic import BaseModel
+from search import *
+
 ### BASE INPUT AND RESPONSE MODELS
 class SignUpInfo(BaseModel):
     """
@@ -178,16 +179,8 @@ async def search(
     timezone: Optional[str] = Query(None, description='(OPTIONAL) Timezone format as UTC+HH e.g. UTC+12)'),
     #account_id: Optional[str] = Query(None, description='(OPTIONAL) Email of user e.g. user@gmail.com')
 ):
-    # Add to search metrics
-    # Pass hardcoded value if passes all correct values
-    if not (all(ord(char) < 128 for char in keyterms) ):
-        raise HTTPException(status_code=400, detail="Parameter validation has failed")
-    #if not (isinstance(geoname_location_id, int)):
-    #    raise HTTPException(status_code=400, detail="Parameter validation has failed")
-    # Error checking dates and geoname_location_id
     data = search_v1(keyterms,location,start_date,end_date,timezone)
     return {"data":data}
-   # raise HTTPException(status_code=404, detail="Endpoint not active")
 
 @app.get(
     '/search/key_frequency',
@@ -195,8 +188,7 @@ async def search(
 )
 async def key_frequency():
     # Obtain most frequently searched keys in DB
-    return Search_Frequently_key_v1()
-    #raise HTTPException(status_code=404, detail="Endpoint not active")
+    return search_frequency_key_v1()
 
 @app.get(
     '/search/history',
@@ -204,5 +196,4 @@ async def key_frequency():
 )
 async def search_history():
     # Right now it is to get the global search history
-    return Search_History_v1()
-    #raise HTTPException(status_code=404, detail="Endpoint not active")
+    return search_history_v1()
