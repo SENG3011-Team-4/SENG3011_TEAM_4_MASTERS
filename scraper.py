@@ -23,6 +23,8 @@ cities = []
 for c in cities_list:
     if c['country'] in countries:
         cities.append(c['name'])
+# Asia is not mentioned as a city in articles        
+cities.remove("Asia")
 
 web_data = []
 
@@ -162,7 +164,7 @@ while page_num != 1:
 
     articles = html.select('div.views-rows')
 
-
+    # Look for a way to split up reports in one article
     for article in articles:
         sub_art = article.select('div.views-field.views-field-rendered-entity')
         for sub in sub_art:
@@ -189,7 +191,7 @@ while page_num != 1:
             art_start = art_html.select_one('div.field.field-name-field-body.field-type-text-long.field-label-hidden')
             art_para = art_start.select('div.field-item.even p')
             
-            # TODO Fix up location -> some countries not included + add cities
+            # Getting location, event date
             locations = []
             country = []
             city = []
@@ -212,15 +214,13 @@ while page_num != 1:
                         if c not in country:
                             country.append(c)
                 for c in cities:
-                    if c in p:
+                    if "in "+c in p or "from "+c in p:
                         if c not in city:
                             city.append(c)                         
             locations.append({"country": country, "cities": city})        
             
-            #event date
-            #syndrome
             
-            # Scraping the diseases mentioned in the article
+            # Scraping the diseases mentioned in the article and matching to syndrome
             filed_under = report.select_one('div.fieldlayout-inline.fieldlayout.node-field-filed_under')
             diseases_filed = filed_under.select('div.field-items')
             diseases = []
