@@ -5,6 +5,7 @@ from pprint import pprint
 from country_scraper import county_scraper
 from datetime import datetime
 import json
+import re
 
 # CIDRAP doesn't have syndromes in articles -> need to input them manually
 f1 = open('syndrome_list.json')
@@ -48,8 +49,41 @@ def identify_syndrome(disease_list):
             syndromes.append("Acute fever and rash")       
     syndromes = list(set(syndromes))        
     return syndromes        
-                           
-                
+                   
+# Uses regex to find specific pattern for date in article
+# Matches one pattern of dates   
+# Pattern DD MMM, YYYY                        
+def find_event_date(text):
+    match = re.findall("((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d|\d{2}), \d{4})", text)
+    dates = []
+    for m in match:
+        dates.append(m[0])
+    date_range = []
+    for d in dates:
+        d = d.split()
+        d[0] = month_to_num(d[0])
+        d[1] = d[1].replace(",", "")
+        if int(d[1]) < 10:
+            d[1] = "0"+d[1]
+        d = d[2]+"-"+d[0]+"-"+d[1]+"T:00:00:00"
+        date_range.append(d)    
+    return date_range                
+
+# Pattern DD MM
+def match_date(text, year):
+    match = re.findall("((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d|\d{2}))", text)
+    dates = []
+    for m in match:
+        dates.append(m[0])
+    date_range = []
+    for d in dates:
+        d = d.split()
+        d[0] = month_to_num(d[0])
+        if int(d[1]) < 10:
+            d[1] = "0"+d[1]
+        d = year+"-"+d[0]+"-"+d[1]+"T00:00:00"
+        date_range.append(d)        
+    return date_range
 
 def month_to_num(mon):
     return {
@@ -140,6 +174,7 @@ while page_num != 1:
             date = date.split()
             date[1] = date[1].replace(",","")
             date[0] = month_to_num(date[0])
+            year = date[2]
             date = date[2]+"-"+date[0]+"-"+date[1]+"T:00:00:00"
             
             art_url = "http://cidrap.umn.edu"+ sub.select_one('.node-title.fieldlayout.node-field-title a')['href']  
@@ -158,8 +193,16 @@ while page_num != 1:
             locations = []
             country = []
             city = []
+            event_dates = []
             for p in art_para:
                 p = p.text
+                dates = find_event_date(p)
+                if dates:
+                    event_dates.append(dates)
+                else:
+                    dates = match_date(p, year)
+                    if dates:
+                        event_dates.append(dates)    
                 # United States written as US in most articles
                 if "US" in p:
                     if "United States" not in country:
@@ -187,7 +230,7 @@ while page_num != 1:
                     diseases.append(disease)    
                 
             syndromes = identify_syndrome(diseases)    
-            reports.append({"disease": diseases, "syndrome": syndromes, "locations": locations})
+            reports.append({"disease": diseases, "syndrome": syndromes, "locations": locations, "event_date": event_dates})
             
             
             
