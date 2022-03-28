@@ -1,10 +1,12 @@
 from flask import Flask, render_template
+import requests
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render_template('home.html')
+    r = requests.get('http://54.206.19.126/healthcheck')
+    return render_template('home.html', data=r.text)
 
 @app.route("/login")
 def login():
