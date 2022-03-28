@@ -10,6 +10,13 @@ def home():
 def login():
     return render_template('login.html')
 
+@app.route("/healthcheck")
+def healthCheck():
+    return render_template('healthcheck.html')
+
+@app.route("/search")
+def search():
+    return render_template('search.html')
 
 if __name__ == '__main__':
    app.run()
