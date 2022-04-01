@@ -120,12 +120,27 @@ def get_reports(args):
     # Current algorithm:
     # Search to find whether any of the key terms exist within the headline, main text of article or diseases in reports
     # Then check whether the reports have locations and dates matching the specified date and location of the search
-	results = rpts.find(
-                {"reports":{"$elemMatch":{"diseases":{"$elemMatch":{ "$regex": args["key_terms"] }}}}},
-			#{"date_of_publication":{"$gt": args["start_date"], "$lt": args["end_date"]}}      
+	
+    results = rpts.find(
+                {"$and":[
+                        # Matching any article with a disease in the disease list
+                        {"report":{"$elemMatch":{"diseases":{"$elemMatch":{ "$regex": args["key_terms"] }}}}},
+                
+                        # AND an event date within the start-end date range
+			            {"date_of_publication":{"$gt": args["start_date"], "$lt": args["end_date"]}},      
+
+                        # TODO: confirm whether we will have an event date or will use date of publication as date range
+                        #{"report":{"$elemMatch":{"event_date":{"$elemMatch":{"$gt": args["start_date"], "$lt": args["end_date"]}}}}},
+
+                        # AND location matching a country OR city as specified
+                        {"$or": [{"report":{"$elemMatch":{"locations":{"$elemMatch":{"country":{"$elemMatch":{"$regex": args["location"]}}}}}}},
+                                {"report":{"$elemMatch":{"locations":{"$elemMatch":{"cities":{"$elemMatch":{"$regex": args["location"]}}}}}}}
+                                ]}
+                ]}
+
 		#{"reports":{"event_date":{"$gt": "2015-05-02T12:12:12", "$lt": "2020-05-02T12:12:12"}}}
 		)
-	return results
+    return results
 
 def get_frequent_keys():
     # returns 5 most frequent keys, alphabetically if there are results with equal frequency

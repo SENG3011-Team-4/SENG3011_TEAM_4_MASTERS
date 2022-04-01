@@ -3,6 +3,7 @@ from Search import *
 from auth import *
 import pytest
 def test_search_1():
+	# TODO: modify locations in this test case to match the location format
 	toggleTests(True)
 	clearAll()
 	data_list = []
