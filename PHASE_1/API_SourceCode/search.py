@@ -19,6 +19,7 @@ def search_v1(key_terms,location,start_date,end_date, timezone = "UTC", token = 
     if start_date_regex is None or end_date_regex is None:
         raise ValueError("Date does not followed the format")
     
+    print(checkdate(start_date, end_date, "start"))
     if checkdate(start_date, end_date, "start"):
         raise ValueError("Start date is later than End date")
     
@@ -33,7 +34,7 @@ def search_v1(key_terms,location,start_date,end_date, timezone = "UTC", token = 
         db.update_frequent_keys(key)# update key terms search history
         # place input parameters into a dict and pass to the database
         params_dict = {
-            "key_term": key,
+            "key_terms": key,
             "location": location,
             "start_date": start_date,
             "end_date": end_date
@@ -89,6 +90,8 @@ def search_frequency_key_update_v1(keys):
     '''
     once have new search history, update the frequently key
     '''
+    db.update_frequent_keys(keys)
+    '''
     mydb = db.getdatabase()
     key_his = mydb.history.find_one({'key':keys})
     if key_his != None:
@@ -98,6 +101,7 @@ def search_frequency_key_update_v1(keys):
     return {
         'is_success': True
     }
+    '''
 
 def search_history_v1(token):
     '''
@@ -133,7 +137,7 @@ def checkdate(time1,time2,check):
     time_1 = datetime.strptime(time1, date_format)
     time_2 = datetime.strptime(time2, date_format)
     diff = time_1-time_2
-    if diff.seconds > 0:
+    if diff.days > 0:
         if check == "start":
             return True
         else:
@@ -143,3 +147,6 @@ def checkdate(time1,time2,check):
             return False
         else:
             return True
+
+if __name__ == '__main__':
+	print (checkdate("2025-10-01T08:45:10","2016-10-01T08:45:10","start"))

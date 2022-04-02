@@ -1,6 +1,6 @@
 
 from database import *
-from Search import *
+from search import *
 from auth import *
 import pytest
 def test_register_invalid_email():

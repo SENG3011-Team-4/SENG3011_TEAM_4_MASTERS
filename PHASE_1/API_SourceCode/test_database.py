@@ -4,7 +4,7 @@ import pymongo
 from pymongo import MongoClient
 import time
 from database import *
-from Search import *
+from search import *
 
 cluster = MongoClient("mongodb+srv://team4masters:uXTbGOYCXJTwTlIN@cluster0.d2xyd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 db = cluster["API-Database"]
