@@ -20,5 +20,9 @@ def healthCheck():
 def search():
     return render_template('search.html')
 
+@app.route("/report")
+def report():
+    return render_template('report.html')
+
 if __name__ == '__main__':
    app.run()

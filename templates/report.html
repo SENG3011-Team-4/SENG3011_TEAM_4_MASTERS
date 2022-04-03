@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Search</title>
+<title>Report</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -27,12 +27,12 @@
   </div>
   <hr>
   <div class="w3-container">
-    <h5>Dashboard</h5>
+    <h5>Report</h5>
   </div>
   <div class="w3-bar-block">
     <a href="/" class="w3-bar-item w3-button w3-padding"><i class="fa fa-dashboard"></i>  Dashboard</a>
     <a href="/healthcheck" class="w3-bar-item w3-button w3-padding"><i class="fa fa-medkit"></i>  Health Check</a>
-    <a href="/search" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-search"></i>  Search</a>
+    <a href="/search" class="w3-bar-item w3-button w3-padding"><i class="fa fa-search"></i>  Search</a>
     <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog"></i>  Settings</a><br><br>
   </div>
 </nav>
@@ -42,58 +42,16 @@
 
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h3><b><i class="fa fa-search"></i> Search</b></h3>
+    <h5><b><i class="fa fa-medkit"></i> Health Check</b></h5>
   </header>
   <br>
+  <div class="w3-container w3-dark-grey w3-padding-32">
+    {{data}}
+  </div>
 
-  <!--Search Form-->
-  <form>
-    <div class="w3-row-padding w3-margin-bottom" >
-      <div class="w3-half">
-        <h5>Disease</h5>
-      </div>
-      <div class="w3-half">
-        <h5>Location</h5>
-      </div>
-    </div>
-    <div class="w3-row-padding w3-margin-bottom">
-      <div class="w3-half">
-        <i class="fa fa-plus-square"></i>
-        <input id="searchDisease" type="text" placeholder="e.g. 'Zika, COVID-19'" style="width: 90%">
-      </div>
-      <div class="w3-half">
-        <i class="fa fa-map-marker"></i>
-        <input id="searchLocation" type="text" placeholder="e.g. 'United States, Sydney'" style="width: 90%">
-      </div>
-    </div>
-    <div class="w3-row-padding w3-margin-bottom" >
-      <div class="w3-half">
-        <h5>Start Date</h5>
-      </div>
-      <div class="w3-half">
-        <h5>End Date</h5>
-      </div>
-    </div>
-    <div class="w3-row-padding w3-margin-bottom">
-      <div class="w3-half">	
-        <i class="fa fa-calendar"></i>
-        <input id="searchStartDate" type="text" placeholder="e.g. '2015-10-01T08:45:10'" style="width: 90%">
-      </div>
-      <div class="w3-half">
-        <i class="fa fa-calendar"></i>
-        <input id="searchEndDate" type="text" placeholder="e.g. '2015-10-01T08:45:10'" style="width: 90%">
-      </div>
-    </div>
-    <div class="w3-container">
-      <a href="/report" class="w3-button w3-green"><i class="fa fa-search"></i>  Search</a>
-    </div>  
-  </form>
-
-  <br>
-  <br>
   <!-- Footer -->
   <footer class="w3-container w3-padding-16 w3-light-grey">
-    <h4></h4>
+    <h4>FOOTER</h4>
         <p></p>
   </footer>
 
