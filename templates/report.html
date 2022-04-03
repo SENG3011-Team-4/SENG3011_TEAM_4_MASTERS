@@ -10,7 +10,7 @@
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
   <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-  <span class="w3-bar-item w3-right">T1_Team4</span>
+  <span class="w3-bar-item w3-right">MediTravel</span>
 </div>
 
 <!-- Sidebar/menu -->
@@ -27,7 +27,7 @@
   </div>
   <hr>
   <div class="w3-container">
-    <h5>Report</h5>
+    <h5>Dashboard</h5>
   </div>
   <div class="w3-bar-block">
     <a href="/" class="w3-bar-item w3-button w3-padding"><i class="fa fa-dashboard"></i>  Dashboard</a>
@@ -42,16 +42,56 @@
 
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="fa fa-medkit"></i> Health Check</b></h5>
+    <h3><b><i class="fa fa-file-text"></i> Report</b></h3>
   </header>
   <br>
-  <div class="w3-container w3-dark-grey w3-padding-32">
-    {{data}}
+
+  <div class="w3-panel">
+    <div class="w3-row-padding" style="margin:0 -16px">
+      <div class="w3-third">
+        <h4>Australia, Sydney</h4>
+        <h5>COVID-19</h5>
+      </div>
+      <div class="w3-twothird">
+        <h5>Recommended Travel Information</h5>
+        <table class="w3-table w3-striped w3-white">
+          <tr>
+            <td><i class="fa fa-plane w3-text-blue w3-large"></i></td>
+            <td>Travel Restrictions</td>
+            <td>All international passengers travelling to Australia must comply with Australian Government entry requirements.
+                There are no longer any restrictions on interstate travel to NSW, however there are other rules in place that you must follow while in NSW.</td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-home w3-text-green w3-large"></i></td>
+            <td>Quarantine</td>
+            <td>1. go straight to your home or accommodation
+                2. take a COVID-19 rapid antigen test
+                3. self-isolate until you get a negative test result
+                4. not visit high risk places for at least 7 days after arrival</td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-medkit w3-text-red w3-large"></i></td>
+            <td>Vaccines</td>
+            <td>A COVID‑19 vaccine is a vaccine intended to provide acquired immunity against severe acute respiratory syndrome coronavirus 2, the virus that causes coronavirus disease 2019.</td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-stethoscope w3-text-blue w3-large"></i></td>
+            <td>Medication</td>
+            <td>N/A</td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </div>
+
+
+
+
+
 
   <!-- Footer -->
   <footer class="w3-container w3-padding-16 w3-light-grey">
-    <h4>FOOTER</h4>
+    <h4></h4>
         <p></p>
   </footer>
 
