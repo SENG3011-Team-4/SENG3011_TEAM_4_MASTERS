@@ -5,8 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    r = requests.get('http://54.206.19.126/healthcheck')
-    return render_template('home.html', data=r.text)
+    return render_template('home.html')
 
 @app.route("/login")
 def login():
@@ -14,7 +13,8 @@ def login():
 
 @app.route("/healthcheck")
 def healthCheck():
-    return render_template('healthcheck.html')
+    r = requests.get('http://54.206.19.126/healthcheck')
+    return render_template('healthcheck.html', data=r.text)
 
 @app.route("/search")
 def search():
