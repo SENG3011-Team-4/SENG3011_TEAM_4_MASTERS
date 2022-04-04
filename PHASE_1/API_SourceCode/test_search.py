@@ -111,3 +111,5 @@ def test_timezone():
 if __name__ == '__main__':
 	#test_search_invalid_time()
 	search_v1("RandoVirus","United States","2025-05-02T15:12:12","2015-05-02T15:12:12")
+	#results = search_v1("COVID-19", "United States", "2015-05-02T15:12:12", "2025-05-02T15:12:12")
+	#print(results)

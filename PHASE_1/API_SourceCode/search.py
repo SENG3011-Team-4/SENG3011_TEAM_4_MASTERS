@@ -19,7 +19,7 @@ def search_v1(key_terms,location,start_date,end_date, timezone = "UTC", token = 
     if start_date_regex is None or end_date_regex is None:
         raise ValueError("Date does not followed the format")
     
-    print(checkdate(start_date, end_date, "start"))
+    #print(checkdate(start_date, end_date, "start"))
     if checkdate(start_date, end_date, "start"):
         raise ValueError("Start date is later than End date")
     

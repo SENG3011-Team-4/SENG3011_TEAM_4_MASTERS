@@ -114,7 +114,7 @@ def write_report(reports):
 #    ]
 # }
 
-
+"""
 def get_reports(args):
     # Current algorithm:
     # Search to find whether any of the key terms exist within the headline, main text of article or diseases in reports
@@ -123,10 +123,10 @@ def get_reports(args):
     results = rpts.find(
                 {"$and":[
                         # Matching any article with a disease in the disease list
-                        {"report":{"$elemMatch":{"diseases":{"$elemMatch":{ "$regex": args["key_terms"] }}}}},
+                        {"report":{"$elemMatch":{"diseases":{"$elemMatch":{ "$regex": args["key_terms"], "$options": "i"}}}}},
                 
                         # AND an event date within the start-end date range
-			            {"date_of_publication":{"$gt": args["start_date"], "$lt": args["end_date"]}},      
+			            #{"date_of_publication":{"$gt": args["start_date"], "$lt": args["end_date"]}},      
 
                         # TODO: confirm whether we will have an event date or will use date of publication as date range
                         #{"report":{"$elemMatch":{"event_date":{"$elemMatch":{"$gt": args["start_date"], "$lt": args["end_date"]}}}}},
@@ -139,7 +139,35 @@ def get_reports(args):
 
 		#{"reports":{"event_date":{"$gt": "2015-05-02T12:12:12", "$lt": "2020-05-02T12:12:12"}}}
 		)
+    
+    results = rpts.find(
+                        {"$and":[
+                                {"report":{"$elemMatch":{"disease":{"$elemMatch":{ "$regex": "covid-19", "$options": "i"}}}}},
+                                {"$or": [{"report":{"$elemMatch":{"locations":{"$elemMatch":{"country":{"$elemMatch":{"$regex": "United States"}}}}}}},
+                                        {"report":{"$elemMatch":{"locations":{"$elemMatch":{"cities":{"$elemMatch":{"$regex": "United States"}}}}}}}
+                                        ]}
+                                ]
+                        }
+    )
+
+    print(args)
     return results
+"""
+
+def get_reports(args):
+    results = rpts.find(
+                        {"$and":[
+                                {"report":{"$elemMatch":{"disease":{"$elemMatch":{ "$regex": args["key_terms"], "$options": "i"}}}}},
+                                {"date_of_publication":{"$gt": args["start_date"], "$lt": args["end_date"]}},      
+                                {"$or": [{"report":{"$elemMatch":{"locations":{"$elemMatch":{"country":{"$elemMatch":{"$regex": args["location"], "$options": "i"}}}}}}},
+                                        {"report":{"$elemMatch":{"locations":{"$elemMatch":{"cities":{"$elemMatch":{"$regex": args["location"], "$options": "i"}}}}}}}
+                                        ]}
+                                ]
+                        }
+    )
+    return results
+
+
 
 def get_frequent_keys():
     # returns 5 most frequent keys, alphabetically if there are results with equal frequency
