@@ -1,6 +1,6 @@
 import pymongo
 from pymongo import MongoClient
-from scraper import web_data
+#from scraper import web_data
 import time
 
 # TODO:
@@ -41,15 +41,19 @@ def registed_user(user_data):
 	return
 
 def Session_update(session_data):
-	Session.insert_one(session_data)
+	if(Session.find_one({"u_id":session_data["u_id"]}) is None):
+		Session.insert_one(session_data)
 	return
 
 def check_session_by_token(token):
 	return Session.find_one({"token":token})
 
+def user_list():
+	return User.find()
 def delete_session(token):
-	#TODO
-    pass
+
+	Session.delete_one({"token":token})
+	return
 # ===================================================
 
 def clearAll():
@@ -115,16 +119,27 @@ def get_reports(args):
     # Current algorithm:
     # Search to find whether any of the key terms exist within the headline, main text of article or diseases in reports
     # Then check whether the reports have locations and dates matching the specified date and location of the search
-	results = rpts.find({
-		"$or": [{"headline": {"$regex": args["key_term"], "$options": 'i'} }, 
-				{"main_text": {"$regex": args["key_term"], "$options": 'i'} },
-                {"reports":{"$elemMatch":{"diseases":{"$elemMatch'":{ "$regex": args["key_term"] }}}}},
-			]},
-			{"reports":{"$elemMatch":{"locations":{"$elemMatch'":{ "$regex": args["location"] }}}}},
-		 {"reports":{"$elemMatch":{"event_date":{"$elemMatch":{"$gt": args["start_date"], "$lt": args["end_date"]}}}}}      
+	
+    results = rpts.find(
+                {"$and":[
+                        # Matching any article with a disease in the disease list
+                        {"report":{"$elemMatch":{"diseases":{"$elemMatch":{ "$regex": args["key_terms"] }}}}},
+                
+                        # AND an event date within the start-end date range
+			            {"date_of_publication":{"$gt": args["start_date"], "$lt": args["end_date"]}},      
+
+                        # TODO: confirm whether we will have an event date or will use date of publication as date range
+                        #{"report":{"$elemMatch":{"event_date":{"$elemMatch":{"$gt": args["start_date"], "$lt": args["end_date"]}}}}},
+
+                        # AND location matching a country OR city as specified
+                        {"$or": [{"report":{"$elemMatch":{"locations":{"$elemMatch":{"country":{"$elemMatch":{"$regex": args["location"]}}}}}}},
+                                {"report":{"$elemMatch":{"locations":{"$elemMatch":{"cities":{"$elemMatch":{"$regex": args["location"]}}}}}}}
+                                ]}
+                ]}
+
 		#{"reports":{"event_date":{"$gt": "2015-05-02T12:12:12", "$lt": "2020-05-02T12:12:12"}}}
 		)
-	return results
+    return results
 
 def get_frequent_keys():
     # returns 5 most frequent keys, alphabetically if there are results with equal frequency
@@ -147,8 +162,8 @@ def update_frequent_keys(key):
 		})
 	return
 
-def get_history():
-    return hist.find({}).sort("search_time", pymongo.ASCENDING).sort( "time", pymongo.DESCENDING ).limit(5)
+def get_history(token):
+    return hist.find({"token":token}).sort( "time", pymongo.DESCENDING ).limit(5)
 
 def modify_history(search_record,token):
 	# TODO
@@ -159,6 +174,7 @@ def modify_history(search_record,token):
     # not sure if searching a database starts is FIFO or LIFO, need to double check in testing
     hist.insert_one({
 		    "his": search_record, 
+		    "token":token,
 		    "time": time.time()
 		})
     
@@ -172,3 +188,4 @@ def modify_history(search_record,token):
     #    hist.insert_one(search_record)
     #else:
     #    hist.insert_one(search_record)
+

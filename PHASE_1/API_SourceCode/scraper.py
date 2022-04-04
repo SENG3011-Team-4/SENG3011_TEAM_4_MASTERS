@@ -1,12 +1,114 @@
+from dis import dis
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
-import pycountry
+from country_scraper import county_scraper
+from datetime import datetime
+import json
 
 # CIDRAP doesn't have syndromes in articles -> need to input them manually
-syndrome_list = ["Haemorrhagic Fever", "Acute Flacid Paralysis", "Acute gastroenteritis", "Acute respiratory syndrome", "Influenza-like illness", "Acute fever and rash", "Fever of unknown origin", "Encephalitis", "Meningitis"]
+f1 = open('syndrome_list.json')
+f2 = open('disease_list.json')
+f3 = open('world-cities_json.json')
+syndrome_list = json.load(f1)
+disease_list = json.load(f2)
+cities_list = json.load(f3)
+
+countries = county_scraper()
+
+# Getting cities from JSON file
+# Excluding cities from countries not in countries list
+cities = []
+for c in cities_list:
+    if c['country'] in countries:
+        cities.append(c['name'])
 
 web_data = []
+
+
+# Some diseases have multiple syndromes
+def identify_syndrome(disease_list):
+    syndromes = []
+    for d in disease_list:
+        if d == "malaria" or d == "measles" or d == "rabies" or d == "poliomyelitis" or d == "zika" or d == "west nile virus" or d == "chikungunya" or d == "enterovirus 71 infection":
+            syndromes.append("Encephalitis") 
+        if "influenza" in d:
+            syndromes.append("Influenza-like illness")    
+        if d == "sars" or d == "COVID-19" or d == "pneumococcus pneumonia":
+            syndromes.append("Acute respiratory syndrome")   
+        if d == "poliomyelitis" or d == "botulism" or d == "west nile virus" or d == "diphtheria":
+            syndromes.append("Acute Flaccid Paralysis")
+        if d == "cryptococcosis" or d == "tuberculosis" or d == "poliomyelitis" or d == "hiv/aids" or d == "enterovirus 71 infection" or d == "varicella" or d == "mumps":
+            syndromes.append("Meningitis")    
+        if "haemorrhagic fever" in d or d == "chikungunya" or d == "lassa fever" or d == "rift valley fever" or d == "marburg virus disease" or d == "hantavirus" or d == "dengue" or d == "yellow fever":
+            syndromes.append("Haemorrhagic Fever") 
+        if d == "rotavirus infection" or d == "norovirus infection" or d == "salmonellosis" or d == "shigellosis" or d == "cholera":
+            syndromes.append("Acute gastroenteritis")
+        if "heptatitis" in d or d == "rubella" or d == "dengue" or d == "ehec (e.coli)" or d == "shigellosis" or d == "rubella" or d == "varicella":
+            syndromes.append("Acute fever and rash")       
+    syndromes = list(set(syndromes))        
+    return syndromes        
+                           
+                
+
+def month_to_num(mon):
+    return {
+        'Jan': '01',
+        'Feb': '02',
+        'Mar': '03',
+        'Apr': '04',
+        'May': '05',
+        'Jun': '06',
+        'Jul': '07',
+        'Aug': '08',
+        'Sep': '09',
+        'Oct': '10',
+        'Nov': '11',
+        'Dec': '12'
+    }[mon]
+
+def disease_shorthand(disease):
+    match disease:
+        case "anthrax":
+            return "anthrax cutaneous" # Theres 3 different anthrax diseases idk how to differentiate
+        case "Avian Influenza (Bird Flu)":
+            return "influenza a/h5n1" # Theres 8 different bird flus
+        case "E coli":
+            return "ehec (e.coli)"
+        case "Ebola":
+            return "ebola haemorrhagic fever"
+        case "Enterovirus, Non-Polio":
+            return "enterovirus 71 infection" # Enterovirus is more an umbrella disease
+        case "Food-and-Mouth Disease":
+            return "hand, foot and mouth disease"
+        case "H1N1 2009 Pandemic Influenza":
+            return "influenza a/h1n1"
+        case "H3N2v Influenza":
+            return "influenza a/h3n2"
+        case "H7N9 Avian Influenza":
+            return "influenza a/h7n9"
+        case "Influenza, General":
+            return "influenza"
+        case "Legionella":
+            return "legionares"
+        case "Listeria":
+            return "listeriosis"
+        case "Marburg":
+            return "marburg virus disease"
+        case "Norovirus":
+            return "norovirus infection"
+        case "Pneumonia":
+            return "pneumococcus pneumonia" # Technically ranges from ear to lungs whereas regular pneumonia is particular to lungs
+        case "Polio":
+            return "poliomyelitis"
+        case "Rotavirus":
+            return "rotavirus infection"
+        case "Salmonella":
+            return "salmonellosis"
+        case "West Nile":
+            return "west nile virus"
+        case _:
+            return disease
 
 # Scraping first 10 pages
 # Final possible page: 1481
@@ -29,7 +131,13 @@ while page_num != 1:
             
             reports = []
             
+            # fetching and formatting date
             date = sub.select_one('.date-display-single').text
+            date = date.split()
+            date[1] = date[1].replace(",","")
+            date[0] = month_to_num(date[0])
+            date = date[2]+"-"+date[0]+"-"+date[1]+"T:00:00:00"
+            
             art_url = "http://cidrap.umn.edu"+ sub.select_one('.node-title.fieldlayout.node-field-title a')['href']  
             
             # Opening article to be scraped
@@ -44,28 +152,23 @@ while page_num != 1:
             
             # TODO Fix up location -> some countries not included + add cities
             locations = []
+            country = []
+            city = []
             for p in art_para:
                 p = p.text
                 # United States written as US in most articles
                 if "US" in p:
-                    if "United States" not in locations:
-                        locations.append("United States")
-                # Korea written as Republic of Korea in pycountry        
-                if "South Korea" in p:
-                    if "South Korea" not in locations:
-                        locations.append("South Korea")        
-                if "North Korea" in p:
-                    if "North Korea" not in locations:
-                        locations.append("North Korea")
-                # Vietnam written as Viet Nam in pycountry
-                if "Vietnam" in p:
-                    if "Vietnam" not in locations:
-                        locations.append("Vietnam")                
-                for c in pycountry.countries:
-                    if c.name in p:
-                        if c.name not in locations:
-                            locations.append(c.name)             
-                        
+                    if "United States" not in country:
+                        country.append("United States")              
+                for c in countries:
+                    if c in p:
+                        if c not in country:
+                            country.append(c)
+                for c in cities:
+                    if c in p:
+                        if c not in city:
+                            city.append(c)                         
+            locations.append({"country": country, "cities": city})        
             
             #event date
             #syndrome
@@ -75,29 +178,24 @@ while page_num != 1:
             diseases_filed = filed_under.select('div.field-items')
             diseases = []
             for d in diseases_filed:
-                disease = d.select_one('.field-item.even a').text
-                diseases.append(disease)    
+                disease = disease_shorthand(d.select_one('.field-item.even a').text)
+                if disease.lower() in disease_list:
+                    diseases.append(disease)    
                 
-            reports.append({"disease": diseases, "locations": locations})
+            syndromes = identify_syndrome(diseases)    
+            reports.append({"disease": diseases, "syndrome": syndromes, "locations": locations})
+            
             
             
             # Main texts -> scraping text under url link for articles
-            try:
-                main_text = sub.select_one('.field-item.even p').text   
-            except AttributeError:
-                bullet_pts = sub.select_one('div.field.field-name-field-bullet-points.field-type-text.field-label-hidden')
-                main_text = []
-                for t in bullet_pts.select('.field-item.even'):
-                    t = t.text
-                    main_text.append(t)
-                for t in bullet_pts.select('.field-item.odd'):
-                    t = t.text
-                    main_text.append(t)    
-                  
-            
+            main_text = sub.select_one('.field-item.even p').text   
+                      
             headline = sub.select_one('.node-title.fieldlayout.node-field-title a').text                      
             web_data.append({"url": art_url, "date_of_publication": date, "headline": headline, "main_text": main_text, "report": reports})
             
     page_num += 1        
 
 pprint(web_data)
+f1.close()
+f2.close()
+f3.close()
