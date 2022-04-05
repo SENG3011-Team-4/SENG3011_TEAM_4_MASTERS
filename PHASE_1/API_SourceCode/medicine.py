@@ -31,6 +31,7 @@ def common_disease_search(location):
 
     frequency_list = []
     # === begin searching most common diseases and keep track of the 5 which have the most articles ===
+    # TODO: refine searching 
     for disease in disease_list:
         article_results = search.search_v1(disease, location, str_start_date, str_end_date)
         if len(frequency_list) < 5 and len(article_results["output"]) != 0:
@@ -82,7 +83,7 @@ def location_medication(location):
     medication_list = []
 
     for disease in common_disease_list:
-        medication_list.append(vaccine_match(disease))
+        medication_list.append(vaccine_match(disease["disease"].lower()))
 
     # TODO: perform post-processing on medications/vaccines before sending it to front end? e.g. do we need to turn the strings into lists
     # TODO: filter based on frequency of articles? maybe a minimum threshold to be considered before recommending medication (e.g. 5 articles in the location)
@@ -90,4 +91,5 @@ def location_medication(location):
     return medication_list
 
 if __name__ == "__main__":
-    print(common_disease_search("United States"))
+    print("Common disease list: ", common_disease_search("United States"))
+    print("Medication list: ", location_medication("United States"))

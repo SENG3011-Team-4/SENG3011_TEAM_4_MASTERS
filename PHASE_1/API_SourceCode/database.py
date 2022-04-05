@@ -28,6 +28,7 @@ keyTerms = db["KeyTerms"]
 
 # User collection stores all registered user information, hashed for security
 User = db["User"]
+
 # Session collection stores data on all currently logged in users to keep track of who is using the site
 Session = db["Session"]
 # ===================================================
@@ -55,6 +56,9 @@ def delete_session(token):
 	Session.delete_one({"token":token})
 	return
 # ===================================================
+
+def loadReports():
+    pass
 
 def clearAll():
     rpts.delete_many({})
