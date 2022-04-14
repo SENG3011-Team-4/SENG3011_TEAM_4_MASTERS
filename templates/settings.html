@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Settings</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="w3-light-grey">
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-bar-item w3-right">MediTravel</span>
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <img src="" class="w3-circle w3-margin-right" style="width:46px">
+    </div>
+    <div class="w3-col s8 w3-bar">
+      <span>Welcome, <strong>USER</strong></span><br>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+    </div>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5>Menu</h5>
+  </div>
+  <div class="w3-bar-block">
+    <a href="/" class="w3-bar-item w3-button w3-padding"><i class="fa fa-dashboard"></i>  Dashboard</a>
+    <a href="/healthcheck" class="w3-bar-item w3-button w3-padding"><i class="fa fa-medkit"></i>  Health Check</a>
+    <a href="/search" class="w3-bar-item w3-button w3-padding"><i class="fa fa-search"></i>  Search</a>
+    <a href="/settings" class="w3-bar-item w3-button w3-padding w3-blue"><i class="fa fa-cog"></i>  Settings</a><br><br>
+  </div>
+</nav>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h3><b><i class="fa fa-cog"></i> Settings</b></h3>
+  </header>
+  <br>
+  <div class="w3-container"><h5>Subcriptions</h5></div>
+  <br>
+
+  <div class="services">
+    <section class="pricecol">
+    <div class="icon">
+    <i class="fa fa-paper-plane-o"></i>
+    </div>
+    <h2><Span>Free</span></h2>
+    <ul>
+    <li>perk 1</li>
+    <li>perk 2</li>
+    </ul>
+    <p>
+    <a class="button"><span>Subscribe</span></a>
+    </p>
+    </section>
+    
+    <section class="pricecol">
+    <div class="icon">
+    <i class="fa fa-plane"></i>
+    </div>
+    <h2><Span>Basic</span></h2>
+    <ul>
+      <li>perk 1</li>
+      <li>perk 2</li>
+    </ul>
+    <p>
+    <a class="button"><span>Subscribe</span></a>
+    </p>
+    </section>
+    
+    <section class="pricecol">
+    <div class="icon">
+    <i class="fa fa-rocket"></i>
+    </div>
+    <h2><Span>Premium</span></h2>
+    <ul>
+      <li>perk 1</li>
+      <li>perk 2</li>
+    </ul>
+    <p>
+    <a class="button"><span>Subscribe</span></a>
+    </p>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-16 w3-light-grey">
+    <h4></h4>
+        <p></p>
+  </footer>
+
+  <!-- End page content -->
+</div>
+
+</body>
+</html>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    .services
+    {
+    width:1000px;
+    overflow:auto;
+    margin:0 auto;
+    }
+    .pricecol
+    {
+    width:31%;
+    background:#616161;
+    min-height:30%;
+    border-radius:10px;
+    position:relative;
+    padding:30px 0px;
+    text-align:center;
+    float:left;
+    margin-left:20px;
+    }
+    .icon
+    {
+    width:60px;
+    height:60px;
+    border-radius:100%;
+    background:#4CAF50;
+    color:#fff;
+    text-align:center;
+    position:relative;
+    margin:0 auto;
+
+    }
+    .icon i
+    {
+    font-size:30px;
+    position:relative;
+    top:15px;
+    }
+    h2
+    {
+    text-align:center;
+    background:#000;
+    text-align:center;
+    color:#fff;
+    }
+    h2 span
+    {
+    display:block;
+    padding: 10px 0px;
+    font-size:20px;
+    }
+    .button
+    {
+    border-radius:34px;
+    color:#fff;
+    font-size:16px;
+    margin-top:15px;
+    text-shadow: 0px 1px 0px #fff;
+    cursor:pointer;
+    display:inline-block;
+    }
+    .button span
+    {
+    display:inline-block;
+    padding:10px 15px;
+    background: none repeat scroll 0% 0% #4CAF50;
+    box-shadow: 0px 0px 1px rgba(255, 255, 255, 0.3) inset, 0px 2px 0px rgba(255, 255, 255, 0.1) inset;
+    }
+    ul
+    {
+    list-style-type:none;
+    padding:0px;
+    color:#fff;
+    font-size:14px;
+    margin:0 auto;
+    text-align:center;
+    width:70%;
+    color:rgb(165, 174, 178);
+    border-bottom:1px solid #000;
+    border-top:1px solid #000;
+    }
+    li
+    {
+    padding:10px 0px;
+    border-top:1px solid #000;
+    border-bottom:1px solid #000;
+    }
+</style>

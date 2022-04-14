@@ -20,6 +20,10 @@ def healthCheck():
 def search():
     return render_template('search.html')
 
+@app.route("/settings")
+def settings():
+    return render_template('settings.html')
+
 @app.route("/report")
 def report():
     return render_template('report.html')
