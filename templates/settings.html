@@ -22,7 +22,7 @@
     <div class="w3-col s8 w3-bar">
       <span>Welcome, <strong>USER</strong></span><br>
       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
-      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+      <a href="/settings" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
     </div>
   </div>
   <hr>
@@ -39,7 +39,6 @@
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:300px;margin-top:43px;">
-
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
     <h3><b><i class="fa fa-cog"></i> Settings</b></h3>
@@ -59,7 +58,7 @@
     <li>perk 2</li>
     </ul>
     <p>
-    <a class="button"><span>Subscribe</span></a>
+    <a class="button" id="freeBtn"><span>Subscribe</span></a>
     </p>
     </section>
     
@@ -73,7 +72,7 @@
       <li>perk 2</li>
     </ul>
     <p>
-    <a class="button"><span>Subscribe</span></a>
+    <a class="button" id="basicBtn"><span>Subscribe</span></a>
     </p>
     </section>
     
@@ -87,9 +86,30 @@
       <li>perk 2</li>
     </ul>
     <p>
-    <a class="button"><span>Subscribe</span></a>
+    <a class="button" id="premiumBtn"><span>Subscribe</span></a>
     </p>
     </section>
+    <!-- Free Modal -->
+    <div id="freeModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="freeClose">&times;</span>
+        <p>Free Plan Successfully Subscribed!</p>
+      </div>
+    </div>
+    <!-- Basic Modal -->
+    <div id="basicModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="basicClose">&times;</span>
+        <p>Basic Plan Successfully Subscribed!</p>
+      </div>
+    </div>
+    <!-- Premium Modal -->
+    <div id="premiumModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="premiumClose">&times;</span>
+        <p>Premium Plan Successfully Subscribed!</p>
+      </div>
+    </div>
   </div>
 
   <!-- Footer -->
@@ -126,7 +146,7 @@
     padding:30px 0px;
     text-align:center;
     float:left;
-    margin-left:20px;
+    margin-left:2%;
     }
     .icon
     {
@@ -195,4 +215,83 @@
     border-top:1px solid #000;
     border-bottom:1px solid #000;
     }
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1; 
+      padding-top: 100px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      color: #4CAF50;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 15%;
+    }
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+}
 </style>
+<script>
+  var freemodal = document.getElementById("freeModal");
+  var freebtn = document.getElementById("freeBtn");
+  var freespan = document.getElementsByClassName("close")[0];
+  freebtn.onclick = function() {
+    freemodal.style.display = "block";
+  }
+  freespan.onclick = function() {
+    freemodal.style.display = "none";
+  }
+  window.onclick = function(event) {
+    if (event.target == freemodal) {
+      freemodal.style.display = "none";
+    }
+  }
+
+  var basicmodal = document.getElementById("basicModal");
+  var basicbtn = document.getElementById("basicBtn");
+  var basicspan = document.getElementsByClassName("close")[1];
+  basicbtn.onclick = function() {
+    basicmodal.style.display = "block";
+  }
+  basicspan.onclick = function() {
+    basicmodal.style.display = "none";
+  }
+  window.onclick = function(event) {
+    if (event.target == basicmodal) {
+      basicmodal.style.display = "none";
+    }
+  }
+
+  var premiummodal = document.getElementById("premiumModal");
+  var premiumbtn = document.getElementById("premiumBtn");
+  var premiumspan = document.getElementsByClassName("close")[2];
+  premiumbtn.onclick = function() {
+    premiummodal.style.display = "block";
+  }
+  premiumspan.onclick = function() {
+    premiummodal.style.display = "none";
+  }
+  window.onclick = function(event) {
+    if (event.target == premiummodal) {
+      premiummodal.style.display = "none";
+    }
+  }
+</script>
