@@ -66,8 +66,32 @@ def disease_prevention(disease):
                    
             pprint(prevention)  
             pprint(vaccine)  
+        
+        case "zika":
+            url = "https://www.cdc.gov/zika/prevention/index.html"    
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.select("div.col-md-12.splash-col ul")
+            for p in data:
+                p = p.text
+                l = p.split("\n")
+                l = l[1:-1]
+                count = 0
+                for points in l:
+                    if count > 4:
+                        break 
+                    elif count < 4:
+                        prevention.append(points)
+                    else:
+                        vaccine.append(points)   
+                    count += 1     
+            
+            pprint(prevention)
+            pprint(vaccine)
+                       
         case _:
             print("No data")        
             
 
-disease_prevention("avian influenza") 
+disease_prevention("zika") 
