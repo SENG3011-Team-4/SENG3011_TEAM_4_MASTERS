@@ -45,17 +45,27 @@ def disease_prevention(disease):
                 
                 
         case "avian influenza" | "influenza a/h5n1" | "influenza a/h7n9" | "influenza a/h9n2" | "influenza a/h1n1" | "influenza a/h1n2" | "influenza a/h3n5" | "influenza a/h3n2" | "influenza a/h2n2":
-            url = "https://www.cdc.gov/flu/avianflu/prevention.htm" 
+            url = "https://wwwnc.cdc.gov/travel/diseases/avian-bird-flu" 
             data = requests.get(url)
             html = BeautifulSoup(data.text, 'html.parser')
             
-            prevention.append("It is recommended for people travelling to countries or states with bird flu outbreaks in poultry or people:")
-            data = html.select("div.col-12.col-md-12 li")
-            for link in data:
-                link = link.text 
-                prevention.append(link)
+            data = html.find('h3', id='whocangetbirdflu').findNext('p')
+            for p in data:
+                p = p.text 
+                prevention.append(p)
+            
+            data = html.find('h3', id='whatcantravelersdotopreventbirdflu').findNext('p')
+            vaccine.append(data.text)    
+            
+            data = html.find('h4', string='Avoid touching birds and visiting places where birds live').findNext('ul')
+            for links in data:
+                links = links.text
+                if links != "\n":
+                    prevention.append(links)      
+            prevention.append("Flu antiviral drugs.")       
                    
-            pprint(prevention)    
+            pprint(prevention)  
+            pprint(vaccine)  
         case _:
             print("No data")        
             
