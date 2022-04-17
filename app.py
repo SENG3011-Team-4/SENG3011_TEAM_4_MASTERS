@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, url_for
 import sys
+from flask import Flask, render_template, request, url_for
+from PHASE_1.API_SourceCode.medicine import common_disease_search, location_medication
 import requests
 
 sys.path.insert(0, sys.path[0]+'\PHASE_1\API_SourceCode')
@@ -8,6 +9,7 @@ for path in sys.path:
     print(path)
 
 from auth import auth_login_v1
+from medicine import common_disease_search, location_medication
 
 app = Flask(__name__)
 
@@ -31,16 +33,6 @@ def authenticate():
         return render_template('login.html',info="Invalid Password")
 
 
-@app.route("/login/authentication")
-def authentication():
-    name = request.form['uname']
-    password = request.form['psw']
-    try:
-        auth_login_v1(name, password)
-        return redirect(url_for(app.home))
-    except:
-        print("Invalid Credentials")
-
 @app.route("/healthcheck")
 def healthCheck():
     r = requests.get('http://54.206.19.126/healthcheck')
@@ -48,6 +40,7 @@ def healthCheck():
 
 @app.route("/search")
 def search():
+    #exec(open("./PHASE_1/medicine.py").read())
     return render_template('search.html')
 
 @app.route("/settings")
