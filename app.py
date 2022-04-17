@@ -1,5 +1,13 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, url_for
+import sys
 import requests
+
+sys.path.insert(0, sys.path[0]+'\PHASE_1\API_SourceCode')
+
+for path in sys.path:
+    print(path)
+
+from auth import auth_login_v1
 
 app = Flask(__name__)
 
@@ -10,6 +18,28 @@ def home():
 @app.route("/login")
 def login():
     return render_template('login.html')
+
+@app.route("/authenticate", methods=["POST","GET"])
+def authenticate():
+    name = request.form['uname']
+    password = request.form['psw']
+    try:
+        auth_login_v1(name, password)
+        return render_template('home.html')
+    except:
+        print("Invalid Credentials")
+        return render_template('login.html',info="Invalid Password")
+
+
+@app.route("/login/authentication")
+def authentication():
+    name = request.form['uname']
+    password = request.form['psw']
+    try:
+        auth_login_v1(name, password)
+        return redirect(url_for(app.home))
+    except:
+        print("Invalid Credentials")
 
 @app.route("/healthcheck")
 def healthCheck():
