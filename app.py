@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from PHASE_1.API_SourceCode.medicine import common_disease_search, location_medication
 import requests
 
 app = Flask(__name__)
@@ -18,6 +19,7 @@ def healthCheck():
 
 @app.route("/search")
 def search():
+    #exec(open("./PHASE_1/medicine.py").read())
     return render_template('search.html')
 
 @app.route("/settings")

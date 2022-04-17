@@ -6,13 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<!--<script type="text/javascript" {{ url_for('static', filename='app.js')}}>
-</script>
-<script type="text/javascript">
-  var d = myFunc(data|tojson);
-  document.getElementById("TEST").innerHTML = "TESTING123";
-</script>-->
-
 <body class="w3-light-grey">
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
@@ -51,15 +44,27 @@
     <h3><b><i class="fa fa-dashboard"></i> My Dashboard</b></h3>
   </header>
   <br>
-  <div class="w3-container w3-dark-grey w3-padding-32">
+  <div class="w3-container">
+    <h5>MediTravel Map</h5>
+    <br>
+    <div id="map" class="w3-container" style="height: 600px; width: 800px"></div>
+    <script>
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -33.9173425, lng: 151.2290788},
+          zoom: 8
+        });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQACKaW5JuZsLk2Cj9LIoz7-auXAdVwSc&callback=initMap"
+    async defer></script>
   </div>
-
   <!-- Footer -->
   <footer class="w3-container w3-padding-16 w3-light-grey">
     <h4></h4>
-        <p id="TEST"></p>
+        <p></p>
   </footer>
-
   <!-- End page content -->
 </div>
 </body>
@@ -71,4 +76,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
     html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    #map {
+        height: 100%;
+    }
 </style>
