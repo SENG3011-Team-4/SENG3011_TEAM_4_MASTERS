@@ -84,7 +84,10 @@ def search_frequency_key_v1():
     for result in results:
         del result['_id']
         output.append(result)
-    return output
+
+    return {
+        "top_five_keys": output
+    }
 
 def search_frequency_key_update_v1(keys):
     '''
@@ -114,7 +117,8 @@ def search_history_v1(token):
         output.append(result)
     return output
 
-def check_timezone(date,Timezone):
+def check_timezone(date, Timezone):
+
     timezone_offset = Timezone[3:]
     hrs = int(timezone_offset[1:3])
     mins = int(timezone_offset[4:6])

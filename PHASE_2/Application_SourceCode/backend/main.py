@@ -3,13 +3,15 @@ Base API Interface linking the web service to other
 resources.
 """
 
+from http.client import responses
 from typing import List, Optional
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 from search import *
+from auth import * 
 
 ### BASE INPUT AND RESPONSE MODELS
-class SignUpInfo(BaseModel):
+class RegisterInfo(BaseModel):
     """
     To be used later to collect account information
     """
@@ -24,6 +26,12 @@ class LoginInfo(BaseModel):
     """
     username: str
     password: str
+
+class LogoutInfo(BaseModel):
+    """
+    Used for logout
+    """
+    token: str
 
 class SearchItem(BaseModel):
     """
@@ -73,11 +81,16 @@ class ArticleJson(BaseModel):
                 "date_of_publication": "2015-10-01T08:45:10",
                 "headline": "Pandemic Caused by RandoVirus",
                 "main_text": "Randovirus is a random virus...",
-                "reports": {
+                "report": {
                     "diseases": ["RandoVirus"],
                     "syndrome": None,
                     "event_date": ["2015-10-01T08:45:10"],
-                    "locations": ["1234567"]
+                    "locations": [
+                        {
+                            'cities': ['Carolina','Massa'],
+                            'country': ['United States']
+                        }
+                    ]
                 }
             }
         }
@@ -91,10 +104,36 @@ class HealthCheck(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "code": 200,
                 "message": "Hello World!"
             }
         }
+    
+class Login(BaseModel):
+    """
+    As per spec
+    """
+    message: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "token": "string"
+            }
+        }
+
+class Logout(BaseModel):
+    """
+    As per spec
+    """
+    message: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "is_success": True
+            }
+        }
+
 
 class SearchHistory(BaseModel):
     top_five_keyterms: List[str]
@@ -106,6 +145,41 @@ class SearchHistory(BaseModel):
             }
         }
 
+class KeyFrequencies(BaseModel):
+    
+    top_five_keys: List[dict]
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "top_five_keys": [
+                    {
+                        "key": "unknown",
+                        "frequency": 291
+                    },
+                    {
+                        "key": "anthrax cutaneous",
+                        "frequency": 287
+                    },
+                    {
+                        "key": "anthrax inhalation",
+                        "frequency": 287
+                    },
+                    {
+                        "key": "anthrax gastrointestinous",
+                        "frequency": 287
+                    },
+                    {
+                        "key": "other",
+                        "frequency": 287
+                    }
+                ]
+            }       
+        }
+
+
+
+
 ### EXAMPLE RESPONSES
 
 search_responses = {
@@ -116,7 +190,7 @@ search_responses = {
                 "examples": {
                     "Paramter Validation": {
                         "summary": "Parameter Validation Failed",
-                        "value": {"code": 400, "message": "Parameter validation has failed"}
+                        "value": {"detail": "Parameter validation has failed"}
                     }
                 }
             }
@@ -128,8 +202,81 @@ search_responses = {
             "application/json": {
                 "examples": {
                     "Unknown": {
-                        "summary": "Unknown Error",
-                        "value": {"code": 500, "message": "Internal Server Error"}
+                        "summary": "Internal Server Error",
+                        "value": {"detail": "Internal Server Error"}
+                    }
+                }
+            }
+        }
+    },
+}
+
+logout_response = {
+    400: {
+        "description": "Bad Request",
+        "content": {
+            "application/json": {
+                "examples": {
+                    "Logout Failed": {
+                        "summary": "Logout Failed",
+                        "value": {"detail": "Logout Failed"}
+                    }
+                }
+            }
+        }
+    },
+    500: {
+        "description": "Internal Server Error",
+        "content": {
+            "application/json": {
+                "examples": {
+                    "Unknown": {
+                        "summary": "Internal Server Error",
+                        "value": {"detail": "Internal Server Error"}
+                    }
+                }
+            }
+        }
+    },
+}
+
+
+
+login_responses = {
+    400: {
+        "description": "Bad Request",
+        "content": {
+            "application/json": {
+                "examples": {
+                    "Invalid Credentials": {
+                        "summary": "Email or Password Invalid",
+                        "value": {"detail": "Invalid Email or Password"}
+                    }
+                }
+            }
+        }
+    },
+    401: {
+        "description": "Unauthorized",
+        "content": {
+            "application/json": {
+                "examples": {
+                    "Incorrect Login Details": {
+                        "summary": "Login parameters incorrect",
+                        "value": {"detail": "Incorrect Email or Password"}
+                    }
+                }
+            }
+        }
+    },
+    500: {
+        "description": "Internal Server Error",
+        "content": {
+            "application/json": {
+                "examples": {
+                    "Unknown": {
+                        "summary": "Internal Server Error",
+                        "value": {"detail": "Internal Server Error"}
                     }
                 }
             }
@@ -158,7 +305,7 @@ app = FastAPI()
 
 @app.get(
     '/healthcheck',
-    response_model = HealthCheck,
+    # response_model = HealthCheck,
     responses = other_responses
 )
 async def healtchcheck():
@@ -166,10 +313,34 @@ async def healtchcheck():
         'message': "Hello World!"
     }
 
+@app.post(
+    '/login',
+    # response_model = Login,
+    responses = login_responses
+)
+async def login(item: LoginInfo):
+    return auth_login_v1(item['email'], item['password'])
+
+@app.post(
+    '/register',
+    # esponse_model = Login,
+    responses = login_responses
+)
+async def login(item: RegisterInfo):
+    return auth_register_v1(item['username'], item['email'], item['password'])
+
+@app.post(
+    '/logout',
+    # response_model = Logout,
+    responses = logout_response
+)
+async def logout(item: LoginInfo):
+    return auth_login_v1(item['email'], item['password'])
+
 @app.get(
     '/search',
-    #response_model = ArticleJson,
-    #responses = search_responses
+    # response_model = ArticleJson,
+    responses = search_responses
 )
 async def search(
     keyterms: str = Query(None, description='Input ASCII string collection of diseases e.g. "Zika,Coronavirus"'),
@@ -179,12 +350,17 @@ async def search(
     timezone: Optional[str] = Query(None, description='(OPTIONAL) Timezone format as UTC+HH e.g. UTC+12)'),
     #account_id: Optional[str] = Query(None, description='(OPTIONAL) Email of user e.g. user@gmail.com')
 ):
-    data = search_v1(keyterms,location,start_date,end_date,timezone)
-    return {"data":data}
+    if (timezone is None):
+        data = search_v1(keyterms, location, start_date, end_date)
+    else:
+        data = search_v1(keyterms, location, start_date, end_date, timezone)
+    return {
+        "data": data
+    }
 
 @app.get(
     '/search/key_frequency',
-    #response_model = SearchHistory
+    # response_model = KeyFrequencies
 )
 async def key_frequency():
     # Obtain most frequently searched keys in DB
@@ -192,8 +368,10 @@ async def key_frequency():
 
 @app.get(
     '/search/history',
-    #response_model =  SearchHistory
+    # response_model =  SearchHistory
 )
-async def search_history():
+async def search_history(
+    token: str = Query(None, description='User Token'),
+):
     # Right now it is to get the global search history
-    return search_history_v1()
+    return search_history_v1(token)
