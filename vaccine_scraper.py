@@ -89,9 +89,43 @@ def disease_prevention(disease):
             
             pprint(prevention)
             pprint(vaccine)
+            
+        case "covid-19":
+            url = "https://www.healthdirect.gov.au/covid-19/how-to-avoid-covid-19"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h2', id='hygiene')
+            prevention.append(data.findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').text)
+            
+            points = data.findNext('ul')
+            for links in points:
+                links = links.text
+                if links != '\n':
+                    prevention.append(links)
+                    
+            data = html.find('h2', id='mask')
+            prevention.append(data.findNext('p').text) 
+            
+            data = html.find('h2', id='vaccination')
+            vaccine.append(data.findNext('p').text)
+            vaccine.append(data.findNext('p').findNext('p').text)       
+            
+            data = html.find('h2', id='distancing')
+            prevention.append(data.findNext('p').findNext('p').text)
+            points = data.findNext('ul')
+            for links in points:
+                links = links.text
+                if links != '\n' and links != " ":
+                    prevention.append(links)
+            
+            pprint(prevention)
+            pprint(vaccine)
+            
                        
         case _:
             print("No data")        
             
 
-disease_prevention("zika") 
+disease_prevention("covid-19") 
