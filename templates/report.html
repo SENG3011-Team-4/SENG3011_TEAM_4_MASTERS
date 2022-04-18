@@ -86,7 +86,18 @@
     document.getElementById("diseaseDiv").innerHTML +=
       '<tr><td><i class="fa fa-file-o"></i></td><td>'+ disease +'</td><td>'+ title +'</td><td><a href="'+ URL +'">'+ URL +'</a></td></tr>'
   }
-
+  
+  const data = JSON.parse('{{content | tojson | safe}}')
+  console.log(data)
+  var i = 0;
+  while (i < data.length) {
+    var j = 0;
+    while (j < data[i].articles.length) {
+      addReport(data[i].diseases[0], data[i].articles[j].title, data[i].articles[j].url);
+      j = j + 1;
+    }
+    i = i + 1;
+  }
   //for (disease in disease_list) { LOOP THROUGH ALL THE DISEASES AND RUN THE addReport() FUNCTION AND FILL IN ALL THE PARAMETERS
   //  addReport()
   //}

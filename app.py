@@ -54,8 +54,8 @@ def search():
 @app.route("/searchDisease", methods=["POST"])
 def searchDisease():
     location = request.form['location']
-    return render_template('report.html', data=location)
-
+    diseases = diseases_at_location([location])
+    return render_template('report.html', data=location, content=diseases)
 
 @app.route("/settings")
 def settings():
