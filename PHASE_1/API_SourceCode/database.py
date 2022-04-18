@@ -171,6 +171,13 @@ def get_reports(args):
     )
     return results
 
+def get_reports_location(args):
+    results = rpts.find(
+                        {"$or": [{"report":{"$elemMatch":{"locations":{"$elemMatch":{"country":{"$elemMatch":{"$regex": args["location"], "$options": "i"}}}}}}},
+                                {"report":{"$elemMatch":{"locations":{"$elemMatch":{"cities":{"$elemMatch":{"$regex": args["location"], "$options": "i"}}}}}}}]}
+    )
+    return results
+
 
 
 def get_frequent_keys():
