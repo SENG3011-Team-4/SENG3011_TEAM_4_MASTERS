@@ -115,7 +115,6 @@ def diseases_at_location(country_list = None):
         except:
             print(country_list)
 
-    print(return_list)
     return return_list
 
 

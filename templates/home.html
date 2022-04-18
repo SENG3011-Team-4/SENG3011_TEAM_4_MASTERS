@@ -92,8 +92,7 @@
 
 
 
-
-
+          
           var j = 0;
           var disease_string_array = new Array();
           var disease_string = ''
@@ -105,7 +104,7 @@
             }
             j = j + 1;
           }
-
+          /*
           disease_string_array.push(disease_string)
           
           var disease_string2 = ''
@@ -138,6 +137,18 @@
             '<br>';
             l = l + 2;
           }
+          */
+
+          var infoString = 
+          '<div>' + 
+          '<h3> Diseases: ' + disease_string + '</h3>' +
+          '</div>' + 
+          '<br>' + 
+          '<div>' + 
+          '<b> Number of reports found: </b>' + data[i].articles.length +
+          '</div>' + 
+          '</br>'
+
 
           handleInfoDisplay(cityCircle, infoString, map); //REPLACE "TESTING" WITH A LIST OF THE DISEASES
           i = i + 1;
