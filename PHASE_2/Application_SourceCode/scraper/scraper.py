@@ -1,11 +1,8 @@
-from dis import dis
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
 from country_scraper import county_scraper
-from datetime import datetime
 import json
-import re
 
 # CIDRAP doesn't have syndromes in articles -> need to input them manually
 f1 = open('syndrome_list.json')
@@ -23,8 +20,6 @@ cities = []
 for c in cities_list:
     if c['country'] in countries:
         cities.append(c['name'])
-# Asia is not mentioned as a city in articles        
-cities.remove("Asia")
 
 web_data = []
 
@@ -51,41 +46,8 @@ def identify_syndrome(disease_list):
             syndromes.append("Acute fever and rash")       
     syndromes = list(set(syndromes))        
     return syndromes        
-                   
-# Uses regex to find specific pattern for date in article
-# Matches one pattern of dates   
-# Pattern DD MMM, YYYY                        
-def find_event_date(text):
-    match = re.findall("((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d|\d{2}), \d{4})", text)
-    dates = []
-    for m in match:
-        dates.append(m[0])
-    date_range = []
-    for d in dates:
-        d = d.split()
-        d[0] = month_to_num(d[0])
-        d[1] = d[1].replace(",", "")
-        if int(d[1]) < 10:
-            d[1] = "0"+d[1]
-        d = d[2]+"-"+d[0]+"-"+d[1]+"T:00:00:00"
-        date_range.append(d)    
-    return date_range                
-
-# Pattern DD MM
-def match_date(text, year):
-    match = re.findall("((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d|\d{2}))", text)
-    dates = []
-    for m in match:
-        dates.append(m[0])
-    date_range = []
-    for d in dates:
-        d = d.split()
-        d[0] = month_to_num(d[0])
-        if int(d[1]) < 10:
-            d[1] = "0"+d[1]
-        d = year+"-"+d[0]+"-"+d[1]+"T00:00:00"
-        date_range.append(d)        
-    return date_range
+                           
+                
 
 def month_to_num(mon):
     return {
@@ -105,16 +67,16 @@ def month_to_num(mon):
 
 def disease_shorthand(disease):
     match disease:
+        case "anthrax":
+            return "anthrax cutaneous" # Theres 3 different anthrax diseases idk how to differentiate
         case "Avian Influenza (Bird Flu)":
-            return "avian influenza" # Theres 8 different bird flus, might need a function to scrape the body of text for any strains mentioned
-        case "BSE":
-            return "mad cow disease"
+            return "influenza a/h5n1" # Theres 8 different bird flus
         case "E coli":
             return "ehec (e.coli)"
         case "Ebola":
             return "ebola haemorrhagic fever"
         case "Enterovirus, Non-Polio":
-            return "enterovirus"
+            return "enterovirus 71 infection" # Enterovirus is more an umbrella disease
         case "Food-and-Mouth Disease":
             return "hand, foot and mouth disease"
         case "H1N1 2009 Pandemic Influenza":
@@ -133,18 +95,14 @@ def disease_shorthand(disease):
             return "marburg virus disease"
         case "Norovirus":
             return "norovirus infection"
-        case "Pandemic Influenza":
-            return "influenza"
+        case "Pneumonia":
+            return "pneumococcus pneumonia" # Technically ranges from ear to lungs whereas regular pneumonia is particular to lungs
         case "Polio":
             return "poliomyelitis"
         case "Rotavirus":
             return "rotavirus infection"
         case "Salmonella":
             return "salmonellosis"
-        case "Swine Influenza":
-            return "influenza a/h1n1"
-        case "VHF":
-            return "hemorrhagic fever"
         case "West Nile":
             return "west nile virus"
         case _:
@@ -164,7 +122,7 @@ while page_num != 1:
 
     articles = html.select('div.views-rows')
 
-    # Look for a way to split up reports in one article
+
     for article in articles:
         sub_art = article.select('div.views-field.views-field-rendered-entity')
         for sub in sub_art:
@@ -176,7 +134,6 @@ while page_num != 1:
             date = date.split()
             date[1] = date[1].replace(",","")
             date[0] = month_to_num(date[0])
-            year = date[2]
             date = date[2]+"-"+date[0]+"-"+date[1]+"T:00:00:00"
             
             art_url = "http://cidrap.umn.edu"+ sub.select_one('.node-title.fieldlayout.node-field-title a')['href']  
@@ -191,20 +148,12 @@ while page_num != 1:
             art_start = art_html.select_one('div.field.field-name-field-body.field-type-text-long.field-label-hidden')
             art_para = art_start.select('div.field-item.even p')
             
-            # Getting location, event date
+            # TODO Fix up location -> some countries not included + add cities
             locations = []
             country = []
             city = []
-            event_dates = []
             for p in art_para:
                 p = p.text
-                dates = find_event_date(p)
-                if dates:
-                    event_dates.append(dates)
-                else:
-                    dates = match_date(p, year)
-                    if dates:
-                        event_dates.append(dates)    
                 # United States written as US in most articles
                 if "US" in p:
                     if "United States" not in country:
@@ -214,13 +163,15 @@ while page_num != 1:
                         if c not in country:
                             country.append(c)
                 for c in cities:
-                    if "in "+c in p or "from "+c in p:
+                    if c in p:
                         if c not in city:
                             city.append(c)                         
             locations.append({"country": country, "cities": city})        
             
+            #event date
+            #syndrome
             
-            # Scraping the diseases mentioned in the article and matching to syndrome
+            # Scraping the diseases mentioned in the article
             filed_under = report.select_one('div.fieldlayout-inline.fieldlayout.node-field-filed_under')
             diseases_filed = filed_under.select('div.field-items')
             diseases = []
@@ -230,9 +181,7 @@ while page_num != 1:
                     diseases.append(disease)    
                 
             syndromes = identify_syndrome(diseases)    
-            if not event_dates:
-                event_dates.append(date)
-            reports.append({"disease": diseases, "syndrome": syndromes, "locations": locations, "event_date": event_dates})
+            reports.append({"disease": diseases, "syndrome": syndromes, "locations": locations})
             
             
             
