@@ -1,6 +1,5 @@
 #import sys
 #sys.path.append('../API_SourceCode')
-import pymongo
 from pymongo import MongoClient
 import time
 from database import *

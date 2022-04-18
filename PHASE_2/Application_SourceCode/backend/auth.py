@@ -1,10 +1,8 @@
 from database import *
 from werkzeug.exceptions import HTTPException
+import hashlib
 import re
-import hashlib
 import jwt
-import hashlib
-import os.path
 
 SECRET = "Seng3011Team4"
 class InputError(HTTPException):

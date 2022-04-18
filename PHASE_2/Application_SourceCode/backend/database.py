@@ -1,4 +1,3 @@
-import pymongo
 from pymongo import MongoClient
 #from scraper import web_data
 import time

@@ -1,9 +1,7 @@
-from dis import dis
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
 from country_scraper import county_scraper
-from datetime import datetime
 import json
 
 # CIDRAP doesn't have syndromes in articles -> need to input them manually

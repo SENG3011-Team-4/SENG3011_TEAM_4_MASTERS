@@ -1,7 +1,6 @@
 # Backend functions for Phase 2
 
 import search as search
-import database as db
 from datetime import datetime, timedelta
 import time
 import json

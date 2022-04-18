@@ -1,7 +1,8 @@
+import pytest
 from database import *
 from search import *
 from auth import *
-import pytest
+
 def test_search_1():
 	# TODO: modify locations in this test case to match the location format
 	toggleTests(True)
@@ -45,21 +46,21 @@ def test_search_1():
 	data_list.append(data_2)
 	write_report(data_list)
 	search_result = search_v1("RandoVirus","United States","2015-05-02T15:12:12","2025-05-02T15:12:12")
-	
 	assert len(search_result["output"]) == 1
-	
 	assert search_result["output"][0]["url"] == data_1["url"]
 	toggleTests(False)
+
 def test_search_invalid_time():
 	toggleTests(True)
 	clearAll()
 	with pytest.raises(ValueError):
-        	search_v1("RandoVirus","United States","1","2") #invalid format
+		search_v1("RandoVirus","United States","1","2") #invalid format
 	with pytest.raises(ValueError):
-        	search_v1("RandoVirus","United States","2025-05-02T15:12:12","2015-05-02T15:12:12") #start date later than end date
+		search_v1("RandoVirus","United States","2025-05-02T15:12:12","2015-05-02T15:12:12") #start date later than end date
 	with pytest.raises(ValueError):
-        	search_v1("RandoVirus","United States","2015-XX-02T15:12:12","2015-05-02T15:12:12")#Unscoped
+		search_v1("RandoVirus","United States","2015-XX-02T15:12:12","2015-05-02T15:12:12")#Unscoped
 	toggleTests(False)
+
 def test_search_fre_key_and_update():
 	toggleTests(True)
 	clearAll()
@@ -70,9 +71,6 @@ def test_search_fre_key_and_update():
 	search_v1("4","United States","2015-05-02T15:12:12","2025-05-02T15:12:12")
 	search_v1("4","United States","2015-05-02T15:12:12","2025-05-02T15:12:12")
 	search_v1("5","United States","2015-05-02T15:12:12","2025-05-02T15:12:12")
-	
-	
-	
 	assert search_frequency_key_v1()[0]["key"] == "4"
 	assert search_frequency_key_v1()[0]["frequency"] == 2
 	search_frequency_key_update_v1("3")
@@ -81,6 +79,7 @@ def test_search_fre_key_and_update():
 	assert search_frequency_key_v1()[1]["key"] in ["3","4"]
 	assert search_frequency_key_v1()[1]["frequency"] == 2
 	toggleTests(False)
+
 def test_Search_History():
 	toggleTests(True)
 	clearAll()
@@ -92,13 +91,13 @@ def test_Search_History():
 	search_v1("4","United States","2015-05-02T15:12:12","2025-05-02T15:12:12",token =usrtoken )
 	search_v1("4","United States","2015-05-02T15:12:12","2025-05-02T15:12:12",token =usrtoken )
 	check_list = []
-
 	for i in search_history_v1(usrtoken):
 		check_list.append(i["his"]["key_terms"])
 	#print (check_list)
 	assert check_list == ["4","4","3","2","1"]
 	toggleTests(False)
-	"""
+
+"""
 def test_timezone():
 	toggleTests(True)
 	clearAll()
@@ -108,6 +107,7 @@ def test_timezone():
 		Check_Timezone("2020-05-02T15:12:12", "something random")
 	toggleTests(False)
 """
+
 if __name__ == '__main__':
 	#test_search_invalid_time()
 	search_v1("RandoVirus","United States","2025-05-02T15:12:12","2015-05-02T15:12:12")
