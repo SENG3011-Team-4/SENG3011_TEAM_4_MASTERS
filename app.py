@@ -19,8 +19,8 @@ def home():
         "location": "Australia",
         "disease": ["COVID-19", "Influenza"]
     }
-    print(diseases_at_location())
-    return render_template('home.html', data=example)
+    L = diseases_at_location()
+    return render_template('home.html', data=L)
 
 @app.route("/login")
 def login():
