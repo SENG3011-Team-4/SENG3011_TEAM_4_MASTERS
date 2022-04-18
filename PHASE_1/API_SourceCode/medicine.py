@@ -86,8 +86,15 @@ def diseases_at_location():
             "location": country
         })
         disease_list = []
+        article_list = []
         for result in results:
             diseases = result['report'][0]['disease']
+            article_dict = {
+                "title": result['headline'],
+                "url": result['url']
+            }
+            if article_dict not in article_list:
+                article_list.append(article_dict)
             for disease in diseases:
                 if disease not in disease_list:
                     disease_list.append(disease)
@@ -98,7 +105,8 @@ def diseases_at_location():
             "country": country,
             "diseases": disease_list,
             "latitude": country_info['latitude'],
-            "longitude": country_info['longitude']
+            "longitude": country_info['longitude'],
+            "articles": article_list
         }
         return_list.append(country_dict)
 

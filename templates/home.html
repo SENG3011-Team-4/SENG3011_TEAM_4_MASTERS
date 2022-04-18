@@ -75,6 +75,7 @@
             radius: 300000,
           });
           var j = 0;
+          var disease_string_array = new Array();
           var disease_string = ''
           while (j < data[i].diseases.length) {
             if (disease_string.length < 1) {
@@ -82,16 +83,49 @@
             } else {
               disease_string = disease_string + ', ' + data[i].diseases[j]
             }
-            console.log(disease_string)
             j = j + 1;
           }
-          handleInfoDisplay(cityCircle, disease_string, map); //REPLACE "TESTING" WITH A LIST OF THE DISEASES
+
+          disease_string_array.push(disease_string)
+          
+          var disease_string2 = ''
+          
+          console.log(data[i].articles[0].title)
+
+          var k = 0;
+          while (k < data[i].articles.length) {
+            var disease_string2 = ''
+            disease_string2 = disease_string2 + data[i].articles[k].title + ': ' 
+            disease_string_array.push(disease_string2)
+            var url_string = ''
+            url_string = data[i].articles[k].url
+            disease_string_array.push(url_string)
+            k = k + 1;
+          }
+
+          var infoString = 
+          '<div>' + 
+          '<h3> Diseases: ' + disease_string_array[0] + '</h3>' +
+          '</div>' + 
+          '<br>'
+
+          var l = 1;
+          while (l < disease_string_array.length) {
+            infoString = infoString +
+            '<div>' + 
+            disease_string_array[l] + ':' + '<a href="' + disease_string_array[l+1] + '">' + disease_string_array[l+1] + '</a>' +
+            '</div>' +
+            '<br>';
+            l = l + 2;
+          }
+
+          handleInfoDisplay(cityCircle, infoString, map); //REPLACE "TESTING" WITH A LIST OF THE DISEASES
           i = i + 1;
         }
       }
       function handleInfoDisplay(cityCircle, info, map){
         var infoWindow= new google.maps.InfoWindow({
-            content: info.toString(),
+            content: info,
             position: cityCircle['center']
             });
             google.maps.event.addListener(cityCircle, 'mouseover', function(ev){
