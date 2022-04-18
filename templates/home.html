@@ -56,8 +56,8 @@
           zoom: 8
         });
         //document.getElementById("footer").innerHTML = '{{data}}';
-        for(var key in '{{data}}') {
-          console.log('{{data}}'[key]);
+        for(var location in '{{data}}') {
+          console.log('{{data.disease}}');
         }
         const cityCircle = new google.maps.Circle({ //PUT THIS CONST IN A FOR LOOP FOR ALL THE LOCATIONS
           strokeColor: "#FF0000",
@@ -69,7 +69,7 @@
           center: {lat: -33.9173425, lng: 151.2290788}, //PUT IN LAT AND LNG OF LOCATION HERE
           radius: 100000,
         });
-        handleInfoDisplay(cityCircle, "TESTING", map); //REPLACE "TESTING" WITH A LIST OF THE DISEASES
+        handleInfoDisplay(cityCircle, "COVID-19, INFLUENZA", map); //REPLACE "TESTING" WITH A LIST OF THE DISEASES
       }
       function handleInfoDisplay(cityCircle, info, map){
         var infoWindow= new google.maps.InfoWindow({
