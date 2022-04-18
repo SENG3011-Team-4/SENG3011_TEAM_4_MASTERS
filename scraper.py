@@ -230,6 +230,8 @@ while page_num != 1:
                     diseases.append(disease)    
                 
             syndromes = identify_syndrome(diseases)    
+            if not event_dates:
+                event_dates.append(date)
             reports.append({"disease": diseases, "syndrome": syndromes, "locations": locations, "event_date": event_dates})
             
             
