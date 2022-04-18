@@ -123,9 +123,34 @@ def disease_prevention(disease):
             pprint(prevention)
             pprint(vaccine)
             
+        case "human papillomavirus (hpv)":
+            url = "https://www.healthdirect.gov.au/human-papillomavirus-hpv-vaccine"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')   
+            
+            data = html.find('h2', id='prevented')
+            prevention.append(data.findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').findNext('p').text)
+            
+            para = data.findNext('p').findNext('p').findNext('p')
+            vaccine.append(para.findNext('p').text)
+            points = data.findNext('ul')
+            for links in points:
+                links = links.text
+                if links != '\n' and links != " ":
+                    vaccine.append(links)
+                    
+            data = html.find('h2', id='treated')
+            prevention.append(data.findNext('p').text)    
+            prevention.append(data.findNext('p').findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').findNext('p').text)    
+            
+            pprint(prevention)
+            pprint(vaccine)
                        
         case _:
             print("No data")        
             
 
-disease_prevention("covid-19") 
+disease_prevention("human papillomavirus (hpv)") 
