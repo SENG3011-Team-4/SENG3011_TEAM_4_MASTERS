@@ -149,8 +149,32 @@ def disease_prevention(disease):
             pprint(prevention)
             pprint(vaccine)
                        
+        case "chikungunya":
+            url = "https://www.healthdirect.gov.au/chikungunya-virus"        
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')       
+            
+            data = html.find('h2', id='diagnosed-treated').findNext('p')
+            prevention.append(data.text)
+            prevention.append(data.findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').findNext('p').text)
+            
+            data = html.find('h2', id='prevented')
+            prevention.append(data.findNext('p').text)
+            points = data.findNext('ul')
+            for links in points:
+                links = links.text
+                if links != '\n' and links != " ":
+                    prevention.append(links)
+
+            vaccine.append("There is no vaccine to prevent chikungunya.")
+            
+            pprint(prevention)
+            pprint(vaccine)
+                       
         case _:
             print("No data")        
             
 
-disease_prevention("human papillomavirus (hpv)") 
+disease_prevention("chikungunya") 
