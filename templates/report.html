@@ -50,48 +50,14 @@
     document.getElementById("location").append('{{data}}')
   </script>
 
-  <div id="diseaseDiv"></div>
-  <!--Travel Information Block-->
-  <!--<div class="w3-panel">
+  <div class="w3-panel">
     <div class="w3-row-padding" style="margin:0 -16px">
-      <div class="w3-third">
-        <h5>COVID-19</h5>
-      </div>
-      <div class="w3-twothird">
-        <h5>Recommended Travel Information</h5>
-        <table class="w3-table w3-striped w3-white">
-          <tr>
-            <td><i class="fa fa-plane w3-text-blue w3-large"></i></td>
-            <td>Travel Restrictions</td>
-            <td>All international passengers travelling to Australia must comply with Australian Government entry requirements.
-                There are no longer any restrictions on interstate travel to NSW, however there are other rules in place that you must follow while in NSW.</td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-home w3-text-green w3-large"></i></td>
-            <td>Quarantine</td>
-            <td>1. go straight to your home or accommodation
-                2. take a COVID-19 rapid antigen test
-                3. self-isolate until you get a negative test result
-                4. not visit high risk places for at least 7 days after arrival</td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-medkit w3-text-red w3-large"></i></td>
-            <td>Vaccines</td>
-            <td>A COVID‑19 vaccine is a vaccine intended to provide acquired immunity against severe acute respiratory syndrome coronavirus 2, the virus that causes coronavirus disease 2019. 
-                <b> Recommended Vaccines: Moderna, Pfizer, AstraZeneca </b> </td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-stethoscope w3-text-blue w3-large"></i></td>
-            <td>Medication</td>
-            <td>While there is no cure for COVID-19, several medicines have been developed that are proving to be effective treatments for people with the illness, although are not intended to be used as a substitute for vaccination.
-                <b> Approved Medication: Remdesivir, Lagevrio, Paxlovid</b>
-            </td>
-          </tr>
+        <h5>Relevant Articles: </h5>
+        <table class="w3-table w3-striped w3-white" id="diseaseDiv">
         </table>
-      </div>
     </div>
   </div>
-  <br>-->
+  <br>
 
 
 
@@ -116,17 +82,12 @@
 </style>
 
 <script>
-  function addDisease(disease, travelRestriction, quarantine, vaccine, medication) {
+  function addReport(disease, title, URL) {
     document.getElementById("diseaseDiv").innerHTML +=
-      '<!--Travel Information Block--><div class="w3-panel"><div class="w3-row-padding" style="margin:0 -16px"><div class="w3-third"><h5>'+ 
-      disease +'</h5></div><div class="w3-twothird"><h5>Recommended Travel Information</h5><table class="w3-table w3-striped w3-white"><tr><td><i class="fa fa-plane w3-text-blue w3-large"></i></td><td>Travel Restrictions</td><td>'+ 
-      travelRestriction +'</td></tr><tr><td><i class="fa fa-home w3-text-green w3-large"></i></td><td>Quarantine</td><td>'+ 
-      quarantine +'</td></tr><tr><td><i class="fa fa-medkit w3-text-red w3-large"></i></td><td>Vaccines</td><td>'+ 
-      vaccine +'</td></tr><tr><td><i class="fa fa-stethoscope w3-text-blue w3-large"></i></td><td>Medication</td><td>'+ 
-      medication +'</td></tr></table></div></div></div><br>';
+      '<tr><td><i class="fa fa-file-o"></i></td><td>'+ disease +'</td><td>'+ title +'</td><td><a href="'+ URL +'">'+ URL +'</a></td></tr>'
   }
 
-  //for (disease in disease_list) { LOOP THROUGH ALL THE DISEASES AND RUN THE addDisease() FUNCTION AND FILL IN ALL THE PARAMETERS
-  //  addDisease()
+  //for (disease in disease_list) { LOOP THROUGH ALL THE DISEASES AND RUN THE addReport() FUNCTION AND FILL IN ALL THE PARAMETERS
+  //  addReport()
   //}
 </script>
