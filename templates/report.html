@@ -45,11 +45,17 @@
     <h3><b><i class="fa fa-file-text"></i> Report</b></h3>
   </header>
   <br>
+  <div class="w3-container" id="location"><h4>Results for:</h4></div>
+  <script>
+    document.getElementById("location").append('{{data}}')
+  </script>
 
-  <div class="w3-panel">
+
+  <div id="diseaseDiv"></div>
+  <!--Travel Information Block-->
+  <!--<div class="w3-panel">
     <div class="w3-row-padding" style="margin:0 -16px">
       <div class="w3-third">
-        <h4>Australia, Sydney</h4>
         <h5>COVID-19</h5>
       </div>
       <div class="w3-twothird">
@@ -86,9 +92,7 @@
       </div>
     </div>
   </div>
-
-
-
+  <br>-->
 
 
 
@@ -111,3 +115,19 @@
 <style>
     html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
+
+<script>
+  function addDisease(disease, travelRestriction, quarantine, vaccine, medication) {
+    document.getElementById("diseaseDiv").innerHTML +=
+      '<!--Travel Information Block--><div class="w3-panel"><div class="w3-row-padding" style="margin:0 -16px"><div class="w3-third"><h5>'+ 
+      disease +'</h5></div><div class="w3-twothird"><h5>Recommended Travel Information</h5><table class="w3-table w3-striped w3-white"><tr><td><i class="fa fa-plane w3-text-blue w3-large"></i></td><td>Travel Restrictions</td><td>'+ 
+      travelRestriction +'</td></tr><tr><td><i class="fa fa-home w3-text-green w3-large"></i></td><td>Quarantine</td><td>'+ 
+      quarantine +'</td></tr><tr><td><i class="fa fa-medkit w3-text-red w3-large"></i></td><td>Vaccines</td><td>'+ 
+      vaccine +'</td></tr><tr><td><i class="fa fa-stethoscope w3-text-blue w3-large"></i></td><td>Medication</td><td>'+ 
+      medication +'</td></tr></table></div></div></div><br>';
+  }
+
+  //for (disease in disease_list) { LOOP THROUGH ALL THE DISEASES AND RUN THE addDisease() FUNCTION AND FILL IN ALL THE PARAMETERS
+  //  addDisease()
+  //}
+</script>

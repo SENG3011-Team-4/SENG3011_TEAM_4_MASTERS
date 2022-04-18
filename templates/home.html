@@ -55,23 +55,17 @@
           center: {lat: -33.9173425, lng: 151.2290788},
           zoom: 8
         });
-        //document.getElementById("footer").innerHTML = '{{data}}';
         const data = JSON.parse('{{data | tojson | safe}}');
-        console.log(data);
-        console.log(data[0])
         var i = 0;
-        //for(var location in '{{data}}') {
-        //  console.log('{{data.disease}}');
-        //}
         while(i < data.length) {
-          const cityCircle = new google.maps.Circle({ //PUT THIS CONST IN A FOR LOOP FOR ALL THE LOCATIONS
+          const cityCircle = new google.maps.Circle({
             strokeColor: "#FF0000",
             strokeOpacity: 0.8,
             strokeWeight: 2,
             fillColor: "#FF0000",
             fillOpacity: 0.35,
             map,
-            center: {lat: data[i].latitude, lng: data[i].longitude}, //PUT IN LAT AND LNG OF LOCATION HERE
+            center: {lat: data[i].latitude, lng: data[i].longitude},
             radius: 300000,
           });
           var j = 0;
