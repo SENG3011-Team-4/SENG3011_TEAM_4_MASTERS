@@ -172,9 +172,62 @@ def disease_prevention(disease):
             
             pprint(prevention)
             pprint(vaccine)
+            
+        case "tuberculosis":
+            url = "https://www.healthdirect.gov.au/tuberculosis"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h2', id='spread')
+            prevention.append(data.findNext('p').text)
+            
+            data = html.find('h2', id='treated') 
+            para = data.findNext('p')
+            count = 0
+            while count < 5:
+                prevention.append(para.text)
+                count += 1
+                para = para.findNext('p')
+                
+            points = data.findNext('ul')
+            for links in points:
+                links = links.text
+                if links != "\n" and links != " ":
+                    prevention.append(links)
+                    
+            data = html.find('h2', id='prevented')
+            vaccine.append(data.findNext('p').text)    
+            vaccine.append(data.findNext('ul').findNext('p').text)        
+               
+            pprint(prevention)
+            pprint(vaccine)   
+            
+        case "salmonella":
+            url = "https://www.healthdirect.gov.au/salmonella" 
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h2', id='prevented')
+            prevention.append(data.findNext('p').text)
+            points = data.findNext('ul')
+            for links in points:
+                links = links.text
+                if links != "\n" and links != " ":
+                    prevention.append(links)
+                    
+            data = html.find('h2', id='treated').findNext('p')
+            count = 0
+            while count < 4:
+                prevention.append(data.text)
+                count += 1
+                data = data.findNext('p')
+                    
+            
+            vaccine.append("No vaccine")
+            pprint(prevention)
+            pprint(vaccine)   
                        
         case _:
             print("No data")        
             
-
-disease_prevention("chikungunya") 
+disease_prevention("salmonella") 
