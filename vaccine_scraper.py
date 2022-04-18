@@ -226,8 +226,42 @@ def disease_prevention(disease):
             vaccine.append("No vaccine")
             pprint(prevention)
             pprint(vaccine)   
+            
+        case "influenza":
+            url = "https://www.healthdirect.gov.au/flu"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h2', id='treatment')
+            prevention.append(data.findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').text)
+            
+            points = data.findNext('ul')
+            for links in points:
+                links = links.text
+                if links != "\n" and links != " ":
+                    prevention.append(links)
+                    
+            data = html.find('h2', id='prevention').findNext('p')
+            count = 0
+            while count < 2:
+                vaccine.append(data.text)
+                data = data.findNext('p')
+                count += 1
+                
+            count = 0
+            while count < 2:
+                prevention.append(data.text)
+                data = data.findNext('p')
+                count += 1    
+                    
+            data = html.find('h2', id='vaccine')
+            vaccine.append(data.findNext('p').text)        
+                         
+            pprint(prevention)
+            pprint(vaccine)             
                        
         case _:
             print("No data")        
             
-disease_prevention("salmonella") 
+disease_prevention("influenza") 
