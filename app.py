@@ -8,8 +8,8 @@ sys.path.insert(0, sys.path[0]+'\PHASE_1\API_SourceCode')
 for path in sys.path:
     print(path)
 
-from auth import auth_login_v1
-from medicine import common_disease_search, location_medication
+#from auth import auth_login_v1
+#from medicine import common_disease_search, location_medication
 
 app = Flask(__name__)
 
@@ -45,6 +45,12 @@ def healthCheck():
 @app.route("/search")
 def search():
     return render_template('search.html')
+
+@app.route("/searchDisease", methods=["POST"])
+def searchDisease():
+    location = request.form['location']
+    return render_template('report.html', data=location)
+
 
 @app.route("/settings")
 def settings():
