@@ -261,7 +261,100 @@ def disease_prevention(disease):
             pprint(prevention)
             pprint(vaccine)             
                        
-        case _:
-            print("No data")        
+        case "measles":
+            url = "https://www.healthdirect.gov.au/measles"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
             
-disease_prevention("influenza") 
+            data = html.find('h2', id='prevented').findNext('p')
+            count = 0
+            while count < 3:
+                vaccine.append(data.text)
+                data = data.findNext('p')
+                count += 1       
+                
+            vaccine.append(data.findNext('p').findNext('p').text) 
+            vaccine.append(data.findNext('p').findNext('p').findNext('p').text)                           
+        
+            data = html.find('h2', id='treated')
+            prevention.append(data.findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').text)
+            points = data.findNext('ul')
+            for links in points:
+                links = links.text
+                if links == '\n' and links == " ":
+                    prevention.append(links)
+            prevention.append(data.findNext('p').findNext('p').findNext('p').text)        
+        
+            pprint(prevention)   
+            pprint(vaccine)    
+               
+        case "ebola haemorrhagic fever":
+            url = "https://www.healthdirect.gov.au/ebola-virus"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h2', id='risk').findNext('p')
+            prevention.append(data.text)
+            prevention.append(data.findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').text)
+            
+            data = html.find('h2', id='diagnosed').findNext('p').findNext('p')
+            vaccine.append(data.findNext('p').text)
+            vaccine.append(data.findNext('p').findNext('p').text)
+            
+            
+            pprint(prevention)
+            pprint(vaccine)
+                       
+        case "sars":
+            url = "https://www.healthdirect.gov.au/severe-acute-respiratory-syndrome-sars"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h2', id='prevent')
+            vaccine.append(data.findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').findNext('p').text)
+            points = data.findNext('ul')
+            for links in points:
+                links = links.text
+                if links != '\n' and links != " ":
+                    prevention.append(links)
+                    
+            data = html.find('h2', id='treatment')
+            prevention.append(data.findNext('p').text)        
+            
+            pprint(prevention)
+            pprint(vaccine)    
+                       
+        case "meningitis":
+            url = "https://www.healthdirect.gov.au/meningitis"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h2', id='prevented')
+            prevention.append(data.findNext('p').text)
+            points = data.findNext('ul')
+            for dot in points:
+                dot = dot.text
+                if dot != '\n' and dot != " ":
+                    prevention.append(dot)
+            prevention.append(data.findNext('p').findNext('p').text) 
+            
+            data = html.find('h3', string='Meningococcal vaccine')
+            vaccine.append(data.findNext('p').text)       
+            points = data.findNext('ul')
+            for dot in points:
+                dot = dot.text
+                if dot != '\n' and dot != " ":
+                    vaccine.append(dot)        
+            
+            pprint(prevention)
+            pprint(vaccine)        
+                       
+        case _:
+            pprint(prevention)
+            pprint(vaccine)        
+            
+disease_prevention("meningitis")
