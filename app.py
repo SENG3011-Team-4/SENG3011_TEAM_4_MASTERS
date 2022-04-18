@@ -3,13 +3,14 @@ from flask import Flask, render_template, request, url_for
 #from PHASE_1.API_SourceCode.medicine import common_disease_search, location_medication
 import requests
 
+
 sys.path.insert(0, sys.path[0]+'\PHASE_1\API_SourceCode')
 
 for path in sys.path:
     print(path)
 
-#from auth import auth_login_v1
-#from medicine import common_disease_search, location_medication
+from auth import auth_login_v1
+from medicine import common_disease_search, location_medication, diseases_at_location
 
 app = Flask(__name__)
 
@@ -19,7 +20,8 @@ def home():
         "location": "Australia",
         "disease": ["COVID-19", "Influenza"]
     }
-    return render_template('home.html', data=example)
+    diseases = diseases_at_location()
+    return render_template('home.html', data=diseases)
 
 @app.route("/login")
 def login():
