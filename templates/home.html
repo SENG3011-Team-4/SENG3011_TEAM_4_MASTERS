@@ -47,6 +47,12 @@
   <div class="w3-container">
     <h5>MediTravel Map</h5>
     <br>
+    <form action="/dashboardSearch" method="post">
+      <input type="text" name="lat" id="lat" hidden>
+      <input type="text" name="lng" id="lng" hidden>
+      <button id="searchbtn" type="submit">Search</button>
+    </form>
+    <br>
     <div id="map" class="w3-container" style="height: 600px; width: 800px"></div>
     <script>
       var map;
@@ -68,6 +74,21 @@
             center: {lat: data[i].latitude, lng: data[i].longitude},
             radius: 300000,
           });
+
+
+
+
+          cityCircle.addListener("click", () => {
+            var lat = cityCircle.getCenter().lat();
+            var lng = cityCircle.getCenter().lng();
+            document.getElementById("lat").value = lat;
+            document.getElementById("lng").value = lng;
+          });
+
+
+
+
+
           var j = 0;
           var disease_string_array = new Array();
           var disease_string = ''
@@ -135,8 +156,7 @@
   </div>
   <!-- Footer -->
   <footer class="w3-container w3-padding-16 w3-light-grey">
-    <h4></h4>
-        <p id="footer"></p>
+        <div id="diseaseDiv"></div>
   </footer>
   <!-- End page content -->
 </div>
@@ -153,3 +173,23 @@
         height: 100%;
     }
 </style>
+
+<script>
+  function addDisease(location, disease, travelRestriction, quarantine, vaccine, medication) {
+    document.getElementById("diseaseDiv").innerHTML =
+      '<div class="w3-container"><h4>Location: '+ 
+      location +'</h4></div>' +
+      '<!--Travel Information Block--><div class="w3-panel"><div class="w3-row-padding" style="margin:0 -16px"><div class="w3-third"><h5>'+ 
+      disease +'</h5></div><div class="w3-twothird"><h5>Recommended Travel Information</h5><table class="w3-table w3-striped w3-white"><tr><td><i class="fa fa-plane w3-text-blue w3-large"></i></td><td>Travel Restrictions</td><td>'+ 
+      travelRestriction +'</td></tr><tr><td><i class="fa fa-home w3-text-green w3-large"></i></td><td>Quarantine</td><td>'+ 
+      quarantine +'</td></tr><tr><td><i class="fa fa-medkit w3-text-red w3-large"></i></td><td>Vaccines</td><td>'+ 
+      vaccine +'</td></tr><tr><td><i class="fa fa-stethoscope w3-text-blue w3-large"></i></td><td>Medication</td><td>'+ 
+      medication +'</td></tr></table></div></div></div><br>';
+  }
+
+  //addDisease("locationtestAustralia", "disease", "asda", "aasd", "asda", "asda");
+  //addDisease("newlocationtestAustralia", "disease", "asda", "aasd", "asda", "asda");
+  //for (disease in disease_list) { LOOP THROUGH ALL THE DISEASES AND RUN THE addDisease() FUNCTION AND FILL IN ALL THE PARAMETERS
+  //  addDisease()
+  //}
+</script>

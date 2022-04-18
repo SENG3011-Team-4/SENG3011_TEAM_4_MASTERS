@@ -16,12 +16,15 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    example = {
-        "location": "Australia",
-        "disease": ["COVID-19", "Influenza"]
-    }
     diseases = diseases_at_location()
     return render_template('home.html', data=diseases)
+
+@app.route("/dashboardSearch",  methods=["POST"])
+def dashboardSearch():
+    lat = request.form['lat']
+    lng = request.form['lng']
+    diseases = diseases_at_location()
+    return render_template('home.html', info="helloworld", data=diseases)
 
 @app.route("/login")
 def login():
