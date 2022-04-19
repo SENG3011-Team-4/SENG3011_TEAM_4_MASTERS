@@ -1,5 +1,8 @@
 from datetime import datetime, timedelta
+from tempfile import tempdir
 import snscrape.modules.twitter as sntwitter
+from bs4 import BeautifulSoup
+import requests
 import time
 import database as db
 import re
@@ -156,9 +159,45 @@ def checkdate(time1,time2,check):
             return True
 
 def search_twitter_v1(location, disease, no_items = 50):
-
     df_city = pd.DataFrame(itertools.islice(sntwitter.TwitterSearchScraper(
         '{} near:"{}" within:10km'.format(disease ,location)).get_items(), no_items))[['url', 'date','user','content', 'likeCount', 'quoteCount', 'retweetCount', 'replyCount']]
     
-    return df_city.to_json(orient='index')
+    return df_city.to_dict(orient='index')
+
+def search_treatment_v1(disease):
+    """
+    Healthdirect live scraper.
+    """
+
+    # Search
+    disease = disease.lower()
+    if 'covid' in disease:
+        pass
+    search_url = f"https://www.healthdirect.gov.au/search-results/{disease}"
+    data = requests.get(search_url)
+    html = BeautifulSoup(data.text, 'html.parser')
+    first_result = html.find("div", class_ = "veyron-local-search-results-list").find_all('a')[0]['href']
+
+    # Extract
+    final_link = f"https://www.healthdirect.gov.au{first_result}"
+    data = requests.get(final_link)
+    html = BeautifulSoup(data.text, 'html.parser')
+    treated_start = html.find('h2', {"id": "treatment"}).next_element.next_element
+    treated_end = treated_start.find_next("h2")
+    html_list = []
+    while treated_start != treated_end:
+        temp_str = str(treated_start)
+        if '<' in temp_str:
+            if "ul" in temp_str and 'li' in temp_str:
+                html_list.append(str(treated_start))
+            if '<p>' in temp_str :
+                html_list.append(str(treated_start))
+        treated_start = treated_start.next_element
+    html_string = "".join(html_list)
+    
+    return html_string
+
+if __name__ == "__main__":
+    search_treatment_v1("colds")
+
     

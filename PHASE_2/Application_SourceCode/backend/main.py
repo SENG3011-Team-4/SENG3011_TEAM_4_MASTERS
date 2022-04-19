@@ -367,6 +367,15 @@ async def search_twitter(
     # Obtain most frequently searched keys in DB
     return search_twitter_v1(location, disease)
 
+@app.get(
+    '/search/treatment'
+)
+async def search_treatment(
+    disease: str = Query(None, description='Input ASCII string collection of location e.g. United states')
+):
+    # Obtain most frequently searched keys in DB
+    return search_treatment_v1(disease)
+
 
 @app.get(
     '/search/key_frequency',
