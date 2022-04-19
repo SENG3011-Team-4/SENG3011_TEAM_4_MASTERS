@@ -3,9 +3,8 @@ Base API Interface linking the web service to other
 resources.
 """
 
-from http.client import responses
 from typing import List, Optional
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, Query
 from pydantic import BaseModel
 from search import *
 from auth import * 
@@ -357,6 +356,17 @@ async def search(
     return {
         "data": data
     }
+
+@app.get(
+    '/search/twitter'
+)
+async def search_twitter(
+    location: str = Query(None, description='Input ASCII string collection of location e.g. United states'),
+    disease: str = Query(None, description='Input ASCII string collection of location e.g. United states')
+):
+    # Obtain most frequently searched keys in DB
+    return search_twitter_v1(location, disease)
+
 
 @app.get(
     '/search/key_frequency',

@@ -1,7 +1,10 @@
 from datetime import datetime, timedelta
+import snscrape.modules.twitter as sntwitter
 import time
 import database as db
 import re
+import pandas as pd
+import itertools
 
 def search_v1(key_terms,location,start_date,end_date, timezone = "UTC", token = None):
     '''
@@ -152,5 +155,10 @@ def checkdate(time1,time2,check):
         else:
             return True
 
-if __name__ == '__main__':
-	print (checkdate("2025-10-01T08:45:10","2016-10-01T08:45:10","start"))
+def search_twitter_v1(location, disease, no_items = 50):
+
+    df_city = pd.DataFrame(itertools.islice(sntwitter.TwitterSearchScraper(
+        '{} near:"{}" within:10km'.format(disease ,location)).get_items(), no_items))[['url', 'date','user','content', 'likeCount', 'quoteCount', 'retweetCount', 'replyCount']]
+    
+    return df_city.to_json(orient='index')
+    
