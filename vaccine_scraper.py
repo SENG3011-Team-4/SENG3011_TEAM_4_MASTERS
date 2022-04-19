@@ -364,9 +364,84 @@ def disease_prevention(disease):
             
             pprint(prevention)
             pprint(vaccine)        
+        
+        case "dengue":
+            url = "https://www.healthdirect.gov.au/dengue-fever"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h2', id='prevented')
+            prevention.append(data.findNext('p').text)
+            prevention.append(data.findNext('p').findNext('p').text)
+            
+            points = data.findNext('li')
+            count = 0
+            while count < 5:
+                prevention.append(points.text)
+                points = points.findNext('li')
+                count += 1
+                
+            vaccine.append("There is no vaccine to prevent dengue fever.")   
+            
+            pprint(prevention)
+            pprint(vaccine)                
+            
+        case "rotavirus":
+            url = "https://www.healthdirect.gov.au/rotavirus"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h3', string="Rotavirus vaccine")  
+            prevention.append(data.findNext('p').findNext('p').text)
+            points = data.findNext('li')
+            count = 0
+            while count < 5:
+                prevention.append(points.text)
+                points = points.findNext('li')
+                count += 1
+                
+            data = html.find('h2', id='prevented')
+            vaccine.append(data.findNext('p').text)
+            
+            pprint(prevention)
+            pprint(vaccine)      
+                       
+        case "cholera":
+            url = "https://www.healthdirect.gov.au/cholera"   
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h2', id='prevented').findNext('p')
+            count = 0
+            while count < 4:
+                prevention.append(data.text)
+                data = data.findNext('p')
+                count += 1
+            vaccine.append(data.text)
+            vaccine.append(data.findNext('p').text) 
+            
+            pprint(prevention)
+            pprint(vaccine)           
+            
+        case "botulism":
+            url = "https://www.healthdirect.gov.au/botulism"
+            data = requests.get(url)
+            html = BeautifulSoup(data.text, 'html.parser')
+            
+            data = html.find('h2', string='Botulism prevention')
+            prevention.append(data.findNext('p').text)
+            points = data.findNext('li')
+            count = 0
+            while count < 5:
+                prevention.append(points.text)
+                points = points.findNext('li')
+                count += 1
+            vaccine.append("There is no vaccine for botulism.")    
+            pprint(prevention)
+            pprint(vaccine)             
                        
         case _:
             pprint(prevention)
             pprint(vaccine)        
             
-disease_prevention("meningitis")
+disease_prevention("botulism")
