@@ -50,9 +50,7 @@ def disease_prevention(disease):
             html = BeautifulSoup(data.text, 'html.parser')
             
             data = html.find('h3', id='whocangetbirdflu').findNext('p')
-            for p in data:
-                p = p.text 
-                prevention.append(p)
+            prevention.append(data.text)
             
             data = html.find('h3', id='whatcantravelersdotopreventbirdflu').findNext('p')
             vaccine.append(data.text)    
