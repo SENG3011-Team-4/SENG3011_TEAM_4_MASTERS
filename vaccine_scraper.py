@@ -57,11 +57,12 @@ def disease_prevention(disease):
             data = html.find('h3', id='whatcantravelersdotopreventbirdflu').findNext('p')
             vaccine.append(data.text)    
             
-            data = html.find('h4', string='Avoid touching birds and visiting places where birds live').findNext('ul')
-            for links in data:
-                links = links.text
-                if links != "\n":
-                    prevention.append(links)      
+            data = html.find('h4', string='Avoid touching birds and visiting places where birds live').findNext('li')
+            count = 0
+            while count < 3:
+                prevention.append(data.text)
+                data = data.findNext('li')
+                count += 1     
             prevention.append("Flu antiviral drugs.")       
                    
             pprint(prevention)  
@@ -444,4 +445,4 @@ def disease_prevention(disease):
             pprint(prevention)
             pprint(vaccine)        
             
-disease_prevention("botulism")
+disease_prevention("influenza a/h5n1")
