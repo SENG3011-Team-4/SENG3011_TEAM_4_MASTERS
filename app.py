@@ -24,9 +24,10 @@ def dashboardSearch():
     lat = request.form['lat']
     lng = request.form['lng']
     diseases = diseases_at_location()
-    tweets = requests.get('http://54.206.19.126/search/twitter', params={"location": "United States", "disease": "COVID-19"})
-    print(tweets)
-    return render_template('home.html', info="helloworld", data=diseases)
+    tweets = requests.get('http://54.206.19.126/search/twitter', params={"location": "United States", "disease": "covid"})
+    print(tweets.text.get_json())
+    requests.get_json()
+    return render_template('home.html', info="helloworld", data=diseases, tweets=tweets.text)
 
 @app.route("/login")
 def login():
