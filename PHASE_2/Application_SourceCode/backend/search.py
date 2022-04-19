@@ -160,5 +160,5 @@ def search_twitter_v1(location, disease, no_items = 50):
     df_city = pd.DataFrame(itertools.islice(sntwitter.TwitterSearchScraper(
         '{} near:"{}" within:10km'.format(disease ,location)).get_items(), no_items))[['url', 'date','user','content', 'likeCount', 'quoteCount', 'retweetCount', 'replyCount']]
     
-    return df_city.to_json(orient='index')
+    return df_city.to_dict(orient='index')
     
