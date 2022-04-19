@@ -191,14 +191,14 @@
 </style>
 
 <script>
-  function addDisease(location, disease, travelRestriction, quarantine, vaccine, medication) {
+  function addDisease(location, disease, travelRestriction, prevention, vaccine, medication) {
     document.getElementById("diseaseDiv").innerHTML =
       '<div class="w3-container"><h4>Location: '+ 
       location +'</h4></div>' +
       '<!--Travel Information Block--><div class="w3-panel"><div class="w3-row-padding" style="margin:0 -16px"><div class="w3-third"><h5>'+ 
       disease +'</h5></div><div class="w3-twothird"><h5>Recommended Travel Information</h5><table class="w3-table w3-striped w3-white"><tr><td><i class="fa fa-plane w3-text-blue w3-large"></i></td><td>Travel Restrictions</td><td>'+ 
       travelRestriction +'</td></tr><tr><td><i class="fa fa-home w3-text-green w3-large"></i></td><td>Quarantine</td><td>'+ 
-      quarantine +'</td></tr><tr><td><i class="fa fa-medkit w3-text-red w3-large"></i></td><td>Vaccines</td><td>'+ 
+      prevention +'</td></tr><tr><td><i class="fa fa-medkit w3-text-red w3-large"></i></td><td>Vaccines</td><td>'+ 
       vaccine +'</td></tr><tr><td><i class="fa fa-stethoscope w3-text-blue w3-large"></i></td><td>Medication</td><td>'+ 
       medication +'</td></tr></table></div></div></div><br>';
   }
@@ -206,6 +206,21 @@
   function addTweet(embedCode) {
     document.getElementById("tweetDiv").innerHTML = embedCode
   }
+
+  try {
+    const info = JSON.parse('{{info | tojson | safe}}');
+    console.log(info)
+    const country = '{{country}}'
+    var i = 0;
+    while(i < info.length) {
+      addDisease(country, info[i]['disease'], "hello", info[i]['prevention'], info[i]['vaccine'], "hello")
+      i = i + 1;
+    }
+  }
+  catch(err) {
+    console.log('something went wrong')
+  }
+
 
   //addDisease("locationtestAustralia", "disease", "asda", "aasd", "asda", "asda");
   //addDisease("newlocationtestAustralia", "disease", "asda", "aasd", "asda", "asda");
