@@ -55,8 +55,7 @@
     <br>
     <div class="w3-row-padding">
       <div id="map" class="w3-left" style="height: 600px; width: 800px"></div>
-      <div class="w3-right">
-        <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Wishing all who celebrate today a blessed and joyful Easter. After a difficult couple of years, let’s give thanks for all the gifts we enjoy—and the people who make this life special. <a href="https://t.co/ZcJdQ4Cn9C">pic.twitter.com/ZcJdQ4Cn9C</a></p>&mdash; Barack Obama (@BarackObama) <a href="https://twitter.com/BarackObama/status/1515691678140715009?ref_src=twsrc%5Etfw">April 17, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      <div class="w3-right" id="tweetDiv">
       </div>
     </div>
     <script>
@@ -203,9 +202,29 @@
       medication +'</td></tr></table></div></div></div><br>';
   }
 
+  function addTweet(embedCode) {
+    document.getElementById("tweetDiv").innerHTML = embedCode
+  }
+
   //addDisease("locationtestAustralia", "disease", "asda", "aasd", "asda", "asda");
   //addDisease("newlocationtestAustralia", "disease", "asda", "aasd", "asda", "asda");
   //for (disease in disease_list) { LOOP THROUGH ALL THE DISEASES AND RUN THE addDisease() FUNCTION AND FILL IN ALL THE PARAMETERS
   //  addDisease()
   //}
+
+  /*
+  var embed_code_list = ''
+  embed_code_list = '{{ecs}}'
+  console.log(embed_code_list)
+
+  var decodeHtmlEntity = function(str) {
+  return str.replace(/&#(\d+);/g, function(match, dec) {
+    return String.fromCharCode(dec);
+    });
+  };
+
+  new_ecs = decodeHtmlEntity(embed_code_list)
+  console.log(new_ecs)
+  //addTweet(embed_code_list)
+  */
 </script>

@@ -2,6 +2,8 @@ import sys
 from flask import Flask, render_template, request, url_for
 #from PHASE_1.API_SourceCode.medicine import common_disease_search, location_medication
 import requests
+import json
+from urllib.parse import urlencode
 
 
 sys.path.insert(0, sys.path[0]+'\PHASE_1\API_SourceCode')
@@ -24,10 +26,18 @@ def dashboardSearch():
     lat = request.form['lat']
     lng = request.form['lng']
     diseases = diseases_at_location()
-    tweets = requests.get('http://54.206.19.126/search/twitter', params={"location": "United States", "disease": "covid"})
-    print(tweets.text.get_json())
-    requests.get_json()
-    return render_template('home.html', info="helloworld", data=diseases, tweets=tweets.text)
+    print(diseases)
+    response = requests.get('http://54.206.19.126/search/twitter', params={"location": "United States", "disease": "covid"})
+    info = response.json()
+    """
+    embed_code_string = ''
+    for key in info:
+        embed_code = get_embed_code(info[key]['url'])
+        embed_code = embed_code.replace(';', '#')
+        embed_code_string = embed_code_string + embed_code
+    print(embed_code_string)"""
+    print(info)
+    return render_template('home.html', data=diseases, tweets=info)
 
 @app.route("/login")
 def login():
@@ -67,6 +77,18 @@ def settings():
 @app.route("/report")
 def report():
     return render_template('report.html')
+
+def get_embed_code(url):
+#url = 'https://twitter.com/jack/status/20'
+    query_string = urlencode({'url': url}) # 'omit_script': 1
+    oembed_url = f"https://publish.twitter.com/oembed?{query_string}"
+
+    r = requests.get(oembed_url)
+    if r.status_code == 200:
+        result = r.json()
+        html = result['html'].strip()
+        
+    return html
 
 if __name__ == '__main__':
    app.run()

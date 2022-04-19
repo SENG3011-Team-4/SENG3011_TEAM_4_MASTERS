@@ -83,7 +83,7 @@ def diseases_at_location(country_list = None):
     """
 
     for country in country_list:
-        print(country)
+        #print(country)
         results = db.get_reports_location({
             "location": country
         })
