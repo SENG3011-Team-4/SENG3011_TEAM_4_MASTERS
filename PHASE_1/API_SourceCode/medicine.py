@@ -117,6 +117,20 @@ def diseases_at_location(country_list = None):
 
     return return_list
 
+def find_country(lat, lng):
+    print("lat lng in function", lat, lng)
+    country_long_lat_list_json = open('long-lat_json.json')
+    country_long_lat_list = json.load(country_long_lat_list_json)
+    country_info = next((item for item in country_long_lat_list['ref_country_codes'] if (item["latitude"] == lat and item["longitude"] == lng)), None)
+
+    print(country_info)
+
+    return country_info['country']
+
+def find_diseases(country, diseases):
+    country_info = next((item for item in diseases if item["country"] == country), None)
+    return country_info
+
 
 def vaccine_match(disease):
     """
@@ -170,6 +184,10 @@ if __name__ == "__main__":
         total_list.append(disease_dict)
     print(total_list)
     """
-    print("Diseases at all locations: ", diseases_at_location("United States"))
+    #print("Diseases at all locations: ", diseases_at_location("United States"))
+
+    print(find_country(13, 122))
+
+    print(find_diseases("United States", diseases_at_location()))
 
     #print("Medication list: ", location_medication("United States"))

@@ -12,7 +12,8 @@ for path in sys.path:
     print(path)
 
 from auth import auth_login_v1
-from medicine import common_disease_search, location_medication, diseases_at_location
+from medicine import common_disease_search, location_medication, diseases_at_location, find_country
+from vaccine_scraper import disease_prevention
 
 app = Flask(__name__)
 
@@ -26,18 +27,21 @@ def dashboardSearch():
     lat = request.form['lat']
     lng = request.form['lng']
     diseases = diseases_at_location()
-    print(diseases)
-    response = requests.get('http://54.206.19.126/search/twitter', params={"location": "United States", "disease": "covid"})
+    # match lat and lng to country
+    country = find_country(int(lat), int(lng))
+    country_info = next((item for item in diseases if item["country"] == country), None)
+    diseases = country_info['diseases']
+    #for disease in diseases:
+    #    prevention_info = disease_prevention(disease)
+    response = requests.get('http://54.206.19.126/search/twitter', params={"location": country, "disease": "covid"})
     info = response.json()
-    """
     embed_code_string = ''
     for key in info:
         embed_code = get_embed_code(info[key]['url'])
         embed_code = embed_code.replace(';', '#')
-        embed_code_string = embed_code_string + embed_code
-    print(embed_code_string)"""
-    print(info)
-    return render_template('home.html', data=diseases, tweets=info)
+        embed_code_string = embed_code_string + embed_code + '\n'
+    print(embed_code_string)
+    return render_template('home.html', data=diseases, tweets=info, ecs=embed_code_string)
 
 @app.route("/login")
 def login():
