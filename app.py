@@ -31,8 +31,13 @@ def dashboardSearch():
     country = find_country(int(lat), int(lng))
     country_info = next((item for item in diseases if item["country"] == country), None)
     diseases = country_info['diseases']
-    #for disease in diseases:
-    #    prevention_info = disease_prevention(disease)
+    for disease in diseases:
+        prevention_info, vaccine_info = disease_prevention(disease)
+        prevention_info_string = ''
+        for string in prevention_info:
+            prevention_info_string = prevention_info_string + string
+        for string2 in vaccine_info:
+            vaccine_info_string = vaccine_info_string + string_2
     response = requests.get('http://54.206.19.126/search/twitter', params={"location": country, "disease": "covid"})
     info = response.json()
     embed_code_string = ''
