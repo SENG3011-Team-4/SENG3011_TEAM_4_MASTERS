@@ -47,7 +47,6 @@ def dashboardSearch():
         }
         disease_list.append(disease_dict)
         print(disease_list)
-        """
     response = requests.get('http://54.206.19.126/search/twitter', params={"location": country, "disease": "covid"})
     info = response.json()
     embed_code_string = ''
@@ -56,8 +55,7 @@ def dashboardSearch():
         embed_code = embed_code.replace(';', '#')
         embed_code_string = embed_code_string + embed_code + '\n'
     print(embed_code_string)
-    """
-    return render_template('home.html', data=diseases, info=disease_list, country=country)
+    return render_template('home.html', data=diseases, info=disease_list, country=country, info2=embed_code_string)
 
 @app.route("/login")
 def login():
