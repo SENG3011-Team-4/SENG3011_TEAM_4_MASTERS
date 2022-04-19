@@ -28,7 +28,7 @@ def dashboardSearch():
     lng = request.form['lng']
     diseases = diseases_at_location()
     # match lat and lng to country
-    country = find_country(int(lat), int(lng))
+    country = find_country(float(lat), float(lng))
     country_info = next((item for item in diseases if item["country"] == country), None)
     diseases2 = country_info['diseases']
     disease_list = []

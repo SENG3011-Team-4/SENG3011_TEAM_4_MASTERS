@@ -212,7 +212,9 @@
     console.log(info)
     const country = '{{country}}'
     var i = 0;
+    console.log(info.length)
     while(i < info.length) {
+      console.log(info[i]['disease'])
       addDisease(country, info[i]['disease'], "hello", info[i]['prevention'], info[i]['vaccine'], "hello")
       i = i + 1;
     }
