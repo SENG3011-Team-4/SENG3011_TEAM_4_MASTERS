@@ -99,11 +99,12 @@ def disease_prevention(disease):
             prevention.append(data.findNext('p').text)
             prevention.append(data.findNext('p').findNext('p').text)
             
-            points = data.findNext('ul')
-            for links in points:
-                links = links.text
-                if links != '\n':
-                    prevention.append(links)
+            points = data.findNext('li')
+            count = 0 
+            while count < 4:
+                prevention.append(points.text)
+                count += 1
+                points = points.findNext('li')
                     
             data = html.find('h2', id='mask')
             prevention.append(data.findNext('p').text) 
@@ -114,11 +115,12 @@ def disease_prevention(disease):
             
             data = html.find('h2', id='distancing')
             prevention.append(data.findNext('p').findNext('p').text)
-            points = data.findNext('ul')
-            for links in points:
-                links = links.text
-                if links != '\n' and links != " ":
-                    prevention.append(links)
+            points = data.findNext('li')
+            count = 0
+            while count < 5:
+                prevention.append(points.text)
+                count += 1
+                points = points.findNext('li')
             
             pprint(prevention)
             pprint(vaccine)
@@ -135,11 +137,12 @@ def disease_prevention(disease):
             
             para = data.findNext('p').findNext('p').findNext('p')
             vaccine.append(para.findNext('p').text)
-            points = data.findNext('ul')
-            for links in points:
-                links = links.text
-                if links != '\n' and links != " ":
-                    vaccine.append(links)
+            points = data.findNext('li')
+            count = 0
+            while count < 3:
+                vaccine.append(points.text)
+                points = points.findNext('li')
+                count += 1
                     
             data = html.find('h2', id='treated')
             prevention.append(data.findNext('p').text)    
@@ -163,10 +166,11 @@ def disease_prevention(disease):
             data = html.find('h2', id='prevented')
             prevention.append(data.findNext('p').text)
             points = data.findNext('ul')
-            for links in points:
-                links = links.text
-                if links != '\n' and links != " ":
-                    prevention.append(links)
+            count = 0
+            while count < 5:
+                prevention.append(points.text)
+                points = points.findNext('li')
+                count += 1
 
             vaccine.append("There is no vaccine to prevent chikungunya.")
             
@@ -190,10 +194,11 @@ def disease_prevention(disease):
                 para = para.findNext('p')
                 
             points = data.findNext('ul')
-            for links in points:
-                links = links.text
-                if links != "\n" and links != " ":
-                    prevention.append(links)
+            count = 0
+            while count < 3:
+                prevention.append(points.text)
+                points = points.findNext('li')
+                count += 1
                     
             data = html.find('h2', id='prevented')
             vaccine.append(data.findNext('p').text)    
@@ -209,11 +214,12 @@ def disease_prevention(disease):
             
             data = html.find('h2', id='prevented')
             prevention.append(data.findNext('p').text)
-            points = data.findNext('ul')
-            for links in points:
-                links = links.text
-                if links != "\n" and links != " ":
-                    prevention.append(links)
+            points = data.findNext('li')
+            count = 0
+            while count < 3:
+                prevention.append(points.text)
+                points = points.findNext('li')
+                count += 1
                     
             data = html.find('h2', id='treated').findNext('p')
             count = 0
@@ -236,11 +242,12 @@ def disease_prevention(disease):
             prevention.append(data.findNext('p').text)
             prevention.append(data.findNext('p').findNext('p').text)
             
-            points = data.findNext('ul')
-            for links in points:
-                links = links.text
-                if links != "\n" and links != " ":
-                    prevention.append(links)
+            points = data.findNext('li')
+            count = 0
+            while count < 6:
+                prevention.append(points.text)
+                points = points.findNext('li')
+                count += 1
                     
             data = html.find('h2', id='prevention').findNext('p')
             count = 0
@@ -279,11 +286,13 @@ def disease_prevention(disease):
             data = html.find('h2', id='treated')
             prevention.append(data.findNext('p').text)
             prevention.append(data.findNext('p').findNext('p').text)
-            points = data.findNext('ul')
-            for links in points:
-                links = links.text
-                if links == '\n' and links == " ":
-                    prevention.append(links)
+            points = data.findNext('li')
+            count = 0
+            while count < 3:
+                prevention.append(points.text)
+                points = points.findNext('li')
+                count += 1
+            
             prevention.append(data.findNext('p').findNext('p').findNext('p').text)        
         
             pprint(prevention)   
@@ -316,11 +325,12 @@ def disease_prevention(disease):
             vaccine.append(data.findNext('p').text)
             prevention.append(data.findNext('p').findNext('p').text)
             prevention.append(data.findNext('p').findNext('p').findNext('p').text)
-            points = data.findNext('ul')
-            for links in points:
-                links = links.text
-                if links != '\n' and links != " ":
-                    prevention.append(links)
+            points = data.findNext('li')
+            count = 0
+            while count < 5:
+                prevention.append(points.text)
+                points = points.findNext('li')
+                count += 1
                     
             data = html.find('h2', id='treatment')
             prevention.append(data.findNext('p').text)        
@@ -335,20 +345,22 @@ def disease_prevention(disease):
             
             data = html.find('h2', id='prevented')
             prevention.append(data.findNext('p').text)
-            points = data.findNext('ul')
-            for dot in points:
-                dot = dot.text
-                if dot != '\n' and dot != " ":
-                    prevention.append(dot)
+            points = data.findNext('li')
+            count = 0
+            while count < 4:
+                prevention.append(points.text)
+                points = points.findNext('li')
+                count += 1
             prevention.append(data.findNext('p').findNext('p').text) 
             
             data = html.find('h3', string='Meningococcal vaccine')
             vaccine.append(data.findNext('p').text)       
-            points = data.findNext('ul')
-            for dot in points:
-                dot = dot.text
-                if dot != '\n' and dot != " ":
-                    vaccine.append(dot)        
+            points = data.findNext('li')
+            count = 0
+            while count < 8:
+                vaccine.append(points.text)
+                points = points.findNext('li')
+                count += 1        
             
             pprint(prevention)
             pprint(vaccine)        
