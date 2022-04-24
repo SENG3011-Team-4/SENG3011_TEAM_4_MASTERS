@@ -72,6 +72,9 @@ def authenticate():
         print("Invalid Credentials")
         return render_template('login.html',info="Invalid Password")
 
+@app.route("/register")
+def register():
+    return render_template('register.html')
 
 @app.route("/healthcheck")
 def healthCheck():
