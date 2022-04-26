@@ -20,9 +20,10 @@
       <img src="" class="w3-circle w3-margin-right" style="width:46px">
     </div>
     <div class="w3-col s8 w3-bar">
-      <span>Welcome, <strong>USER</strong></span><br>
+      <span>Welcome, <strong>Sample User</strong></span><br>
       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
       <a href="/settings" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+      <a href="/login"class="w3-bar-item w3-button"><i class="fa fa-sign-out" id="logoutbtn"></i></a>
     </div>
   </div>
   <hr>
@@ -45,50 +46,19 @@
     <h3><b><i class="fa fa-file-text"></i> Report</b></h3>
   </header>
   <br>
+  <div class="w3-container" id="location"><h4>Results for:</h4></div>
+  <script>
+    document.getElementById("location").append('{{data}}')
+  </script>
 
   <div class="w3-panel">
     <div class="w3-row-padding" style="margin:0 -16px">
-      <div class="w3-third">
-        <h4>Australia, Sydney</h4>
-        <h5>COVID-19</h5>
-      </div>
-      <div class="w3-twothird">
-        <h5>Recommended Travel Information</h5>
-        <table class="w3-table w3-striped w3-white">
-          <tr>
-            <td><i class="fa fa-plane w3-text-blue w3-large"></i></td>
-            <td>Travel Restrictions</td>
-            <td>All international passengers travelling to Australia must comply with Australian Government entry requirements.
-                There are no longer any restrictions on interstate travel to NSW, however there are other rules in place that you must follow while in NSW.</td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-home w3-text-green w3-large"></i></td>
-            <td>Quarantine</td>
-            <td>1. go straight to your home or accommodation
-                2. take a COVID-19 rapid antigen test
-                3. self-isolate until you get a negative test result
-                4. not visit high risk places for at least 7 days after arrival</td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-medkit w3-text-red w3-large"></i></td>
-            <td>Vaccines</td>
-            <td>A COVID‑19 vaccine is a vaccine intended to provide acquired immunity against severe acute respiratory syndrome coronavirus 2, the virus that causes coronavirus disease 2019. 
-                <b> Recommended Vaccines: Moderna, Pfizer, AstraZeneca </b> </td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-stethoscope w3-text-blue w3-large"></i></td>
-            <td>Medication</td>
-            <td>While there is no cure for COVID-19, several medicines have been developed that are proving to be effective treatments for people with the illness, although are not intended to be used as a substitute for vaccination.
-                <b> Approved Medication: Remdesivir, Lagevrio, Paxlovid</b>
-            </td>
-          </tr>
+        <h5>Relevant Articles: </h5>
+        <table class="w3-table w3-striped w3-white" id="diseaseDiv">
         </table>
-      </div>
     </div>
   </div>
-
-
-
+  <br>
 
 
 
@@ -111,3 +81,25 @@
 <style>
     html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
+
+<script>
+  function addReport(disease, title, URL) {
+    document.getElementById("diseaseDiv").innerHTML +=
+      '<tr><td><i class="fa fa-file-o"></i></td><td>'+ disease +'</td><td>'+ title +'</td><td><a href="'+ URL +'">'+ URL +'</a></td></tr>'
+  }
+  
+  const data = JSON.parse('{{content | tojson | safe}}')
+  console.log(data)
+  var i = 0;
+  while (i < data.length) {
+    var j = 0;
+    while (j < data[i].articles.length) {
+      addReport(data[i].diseases[0], data[i].articles[j].title, data[i].articles[j].url);
+      j = j + 1;
+    }
+    i = i + 1;
+  }
+  //for (disease in disease_list) { LOOP THROUGH ALL THE DISEASES AND RUN THE addReport() FUNCTION AND FILL IN ALL THE PARAMETERS
+  //  addReport()
+  //}
+</script>

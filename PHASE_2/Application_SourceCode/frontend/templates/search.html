@@ -20,9 +20,10 @@
       <img src="" class="w3-circle w3-margin-right" style="width:46px">
     </div>
     <div class="w3-col s8 w3-bar">
-      <span>Welcome, <strong>USER</strong></span><br>
+      <span>Welcome, <strong>Sample User</strong></span><br>
       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
       <a href="/settings" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+      <a href="/login"class="w3-bar-item w3-button"><i class="fa fa-sign-out" id="logoutbtn"></i></a>
     </div>
   </div>
   <hr>
@@ -47,45 +48,21 @@
   <br>
 
   <!--Search Form-->
-  <form>
+  <form action="/searchDisease" method="post">
     <div class="w3-row-padding w3-margin-bottom" >
-      <div class="w3-half">
-        <h5>Disease</h5>
-      </div>
       <div class="w3-half">
         <h5>Location</h5>
       </div>
     </div>
     <div class="w3-row-padding w3-margin-bottom">
       <div class="w3-half">
-        <i class="fa fa-plus-square"></i>
-        <input id="searchDisease" type="text" placeholder="e.g. 'Zika, COVID-19'" style="width: 90%">
-      </div>
-      <div class="w3-half">
         <i class="fa fa-map-marker"></i>
-        <input id="searchLocation" type="text" placeholder="e.g. 'United States, Sydney'" style="width: 90%">
+        <input name="location" type="text" placeholder="e.g. 'United States, Australia'" style="width: 90%" required>
       </div>
     </div>
-    <!--<div class="w3-row-padding w3-margin-bottom" >
-      <div class="w3-half">
-        <h5>Start Date</h5>
-      </div>
-      <div class="w3-half">
-        <h5>End Date</h5>
-      </div>
-    </div>
-    <div class="w3-row-padding w3-margin-bottom">
-      <div class="w3-half">	
-        <i class="fa fa-calendar"></i>
-        <input id="searchStartDate" type="text" placeholder="e.g. '2015-10-01T08:45:10'" style="width: 90%">
-      </div>
-      <div class="w3-half">
-        <i class="fa fa-calendar"></i>
-        <input id="searchEndDate" type="text" placeholder="e.g. '2015-10-01T08:45:10'" style="width: 90%">
-      </div>
-    </div>-->
     <div class="w3-container">
-      <a href="/report" class="w3-button w3-green"><i class="fa fa-search"></i>  Search</a>
+      <button id="searchbtn" type="submit" class="w3-button w3-green"><i class="fa fa-search"></i>Search</button>
+      <!--<a href="/searchDisease" class="w3-button w3-green"><i class="fa fa-search"></i>  Search</a>-->
     </div>  
   </form>
 
@@ -110,3 +87,9 @@
 <style>
     html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 </style>
+
+<script type="text/javascript">
+  document.getElementById("searchbtn").onclick = function () {
+      location.href = "/report";
+  };
+</script>

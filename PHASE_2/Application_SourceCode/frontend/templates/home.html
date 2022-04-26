@@ -19,9 +19,10 @@
       <img src="" class="w3-circle w3-margin-right" style="width:46px">
     </div>
     <div class="w3-col s8 w3-bar">
-      <span>Welcome, <strong>USER</strong></span><br>
+      <span>Welcome, <strong>Sample User</strong></span><br>
       <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
       <a href="/settings" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+      <a href="/login"class="w3-bar-item w3-button"><i class="fa fa-sign-out" id="logoutbtn"></i></a>
     </div>
   </div>
   <hr>
@@ -47,7 +48,21 @@
   <div class="w3-container">
     <h5>MediTravel Map</h5>
     <br>
-    <div id="map" class="w3-container" style="height: 600px; width: 800px"></div>
+    <form action="/dashboardSearch" method="post">
+      <input type="text" name="lat" id="lat" hidden>
+      <input type="text" name="lng" id="lng" hidden>
+      <button id="searchbtn" type="submit">Search</button>
+    </form>
+    <br>
+    <div class="w3-row-padding">
+      <div id="map" class="w3-left" style="height: 600px; width: 800px"></div>
+      <div class="w3-right" id="tweetDiv">
+        <h5> Twitter Feed </h5>
+        <div style="height:600px;width:600px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+          {{info2 | safe}}
+        </div>
+      </div>
+    </div>
     <script>
       var map;
       function initMap() {
@@ -55,6 +70,105 @@
           center: {lat: -33.9173425, lng: 151.2290788},
           zoom: 8
         });
+        const data = JSON.parse('{{data | tojson | safe}}');
+        var i = 0;
+        while(i < data.length) {
+          const cityCircle = new google.maps.Circle({
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#FF0000",
+            fillOpacity: 0.35,
+            map,
+            center: {lat: data[i].latitude, lng: data[i].longitude},
+            radius: 300000,
+          });
+
+
+
+
+          cityCircle.addListener("click", () => {
+            var lat = cityCircle.getCenter().lat();
+            var lng = cityCircle.getCenter().lng();
+            document.getElementById("lat").value = lat;
+            document.getElementById("lng").value = lng;
+          });
+
+
+
+          
+          var j = 0;
+          var disease_string_array = new Array();
+          var disease_string = ''
+          while (j < data[i].diseases.length) {
+            if (disease_string.length < 1) {
+              disease_string = disease_string + data[i].diseases[j]
+            } else {
+              disease_string = disease_string + ', ' + data[i].diseases[j]
+            }
+            j = j + 1;
+          }
+          /*
+          disease_string_array.push(disease_string)
+          
+          var disease_string2 = ''
+          
+          console.log(data[i].articles[0].title)
+
+          var k = 0;
+          while (k < data[i].articles.length) {
+            var disease_string2 = ''
+            disease_string2 = disease_string2 + data[i].articles[k].title + ': ' 
+            disease_string_array.push(disease_string2)
+            var url_string = ''
+            url_string = data[i].articles[k].url
+            disease_string_array.push(url_string)
+            k = k + 1;
+          }
+
+          var infoString = 
+          '<div>' + 
+          '<h3> Diseases: ' + disease_string_array[0] + '</h3>' +
+          '</div>' + 
+          '<br>'
+
+          var l = 1;
+          while (l < disease_string_array.length) {
+            infoString = infoString +
+            '<div>' + 
+            disease_string_array[l] + ':' + '<a href="' + disease_string_array[l+1] + '">' + disease_string_array[l+1] + '</a>' +
+            '</div>' +
+            '<br>';
+            l = l + 2;
+          }
+          */
+
+          var infoString = 
+          '<div>' + 
+          '<h3> Diseases: ' + disease_string + '</h3>' +
+          '</div>' + 
+          '<br>' + 
+          '<div>' + 
+          '<b> Number of reports found: </b>' + data[i].articles.length +
+          '</div>' + 
+          '</br>'
+
+
+          handleInfoDisplay(cityCircle, infoString, map); //REPLACE "TESTING" WITH A LIST OF THE DISEASES
+          i = i + 1;
+        }
+      }
+      function handleInfoDisplay(cityCircle, info, map){
+        var infoWindow= new google.maps.InfoWindow({
+            content: info,
+            position: cityCircle['center']
+            });
+            google.maps.event.addListener(cityCircle, 'mouseover', function(ev){
+                infoWindow.open(map);
+            });
+            google.maps.event.addListener(cityCircle, 'mouseout', function(ev){
+                infoWindow.close();
+            });
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQACKaW5JuZsLk2Cj9LIoz7-auXAdVwSc&callback=initMap"
@@ -62,8 +176,7 @@
   </div>
   <!-- Footer -->
   <footer class="w3-container w3-padding-16 w3-light-grey">
-    <h4></h4>
-        <p></p>
+        <div id="diseaseDiv"></div>
   </footer>
   <!-- End page content -->
 </div>
@@ -80,3 +193,61 @@
         height: 100%;
     }
 </style>
+
+<script>
+  function addDisease(location, disease, travelRestriction, prevention, vaccine, medication) {
+    document.getElementById("diseaseDiv").innerHTML =
+      '<div class="w3-container"><h4>Location: '+ 
+      location +'</h4></div>' +
+      '<!--Travel Information Block--><div class="w3-panel"><div class="w3-row-padding" style="margin:0 -16px"><div class="w3-third"><h5>' + '<h5>Disease: </h5>' + 
+      disease +'</h5></div><div class="w3-twothird"><h5>Recommended Travel Information</h5><table class="w3-table w3-striped w3-white"><tr><td>' + //<i class="fa fa-plane w3-text-blue w3-large"></i></td><td>Travel Restrictions</td><td>'+ 
+      //travelRestriction +'</td></tr><tr><td>
+      '<i class="fa fa-home w3-text-green w3-large"></i></td><td>Prevention</td><td>'+ 
+      prevention +'</td></tr><tr><td><i class="fa fa-medkit w3-text-red w3-large"></i></td><td>Vaccines</td><td>'+ 
+      vaccine +'</td></tr><tr><td><i class="fa fa-stethoscope w3-text-blue w3-large"></i></td><td>Medication</td><td>'+ 
+      medication +'</td></tr></table></div></div></div><br>';
+  }
+
+  function addTweet(embedCode) {
+    document.getElementById("tweetDiv").innerHTML = embedCode
+  }
+
+  try {
+    const info = JSON.parse('{{info | tojson | safe}}');
+    console.log(info)
+    const country = '{{country}}'
+    var i = 0;
+    console.log(info.length)
+    while(i < info.length) {
+      console.log(info[i]['disease'])
+      addDisease(country, info[i]['disease'], "hello", info[i]['prevention'], info[i]['vaccine'], "== FEATURE COMING SOON ==")
+      i = i + 1;
+    }
+  }
+  catch(err) {
+    console.log('something went wrong')
+  }
+
+
+  //addDisease("locationtestAustralia", "disease", "asda", "aasd", "asda", "asda");
+  //addDisease("newlocationtestAustralia", "disease", "asda", "aasd", "asda", "asda");
+  //for (disease in disease_list) { LOOP THROUGH ALL THE DISEASES AND RUN THE addDisease() FUNCTION AND FILL IN ALL THE PARAMETERS
+  //  addDisease()
+  //}
+
+  /*
+  var embed_code_list = ''
+  embed_code_list = '{{ecs}}'
+  console.log(embed_code_list)
+
+  var decodeHtmlEntity = function(str) {
+  return str.replace(/&#(\d+);/g, function(match, dec) {
+    return String.fromCharCode(dec);
+    });
+  };
+
+  new_ecs = decodeHtmlEntity(embed_code_list)
+  console.log(new_ecs)
+  //addTweet(embed_code_list)
+  */
+</script>
