@@ -48,6 +48,8 @@
   <div class="w3-container w3-row-padding">
     <div class="w3-left">
       <h5>MediTravel Map</h5>
+      <i>How to use interactive map: Click on the desired country's red circle on the map and then click SEARCH</i>
+      <br>
       <br>
       <form action="/dashboardSearch" method="post">
         <input type="text" name="lat" id="lat" hidden>
@@ -59,7 +61,7 @@
     </div>
     <div class="w3-right" id="tweetDiv">
       <h5> Twitter Feed </h5>
-      <div style="height:600px;width:600px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+      <div style="height:600px;width:600px; font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
         {{info2 | safe}}
       </div>
     </div>
@@ -68,7 +70,7 @@
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -33.9173425, lng: 151.2290788},
-          zoom: 8
+          zoom: 2
         });
         const data = JSON.parse('{{data | tojson | safe}}');
         var i = 0;
@@ -191,6 +193,16 @@
     html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     #map {
         height: 100%;
+    }
+
+    #searchbtn {
+      background-color: #04AA6D;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
     }
 </style>
 
