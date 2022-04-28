@@ -45,22 +45,24 @@
     <h3><b><i class="fa fa-dashboard"></i> My Dashboard</b></h3>
   </header>
   <br>
-  <div class="w3-container">
-    <h5>MediTravel Map</h5>
-    <br>
-    <form action="/dashboardSearch" method="post">
-      <input type="text" name="lat" id="lat" hidden>
-      <input type="text" name="lng" id="lng" hidden>
-      <button id="searchbtn" type="submit">Search</button>
-    </form>
-    <br>
-    <div class="w3-row-padding">
-      <div id="map" class="w3-left" style="height: 600px; width: 800px"></div>
-      <div class="w3-right" id="tweetDiv">
-        <h5> Twitter Feed </h5>
-        <div style="height:600px;width:600px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
-          {{info2 | safe}}
-        </div>
+  <div class="w3-container w3-row-padding">
+    <div class="w3-left">
+      <h5>MediTravel Map</h5>
+      <i>How to use interactive map: Click on the desired country's red circle on the map and then click SEARCH</i>
+      <br>
+      <br>
+      <form action="/dashboardSearch" method="post">
+        <input type="text" name="lat" id="lat" hidden>
+        <input type="text" name="lng" id="lng" hidden>
+        <button id="searchbtn" type="submit">Search</button>
+      </form>
+      <br>
+      <div id="map" style="height: 600px; width: 800px"></div>
+    </div>
+    <div class="w3-right" id="tweetDiv">
+      <h5> Twitter Feed </h5>
+      <div style="height:600px;width:600px; font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+        {{info2 | safe}}
       </div>
     </div>
     <script>
@@ -68,7 +70,7 @@
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -33.9173425, lng: 151.2290788},
-          zoom: 8
+          zoom: 2
         });
         const data = JSON.parse('{{data | tojson | safe}}');
         var i = 0;
@@ -192,12 +194,22 @@
     #map {
         height: 100%;
     }
+
+    #searchbtn {
+      background-color: #04AA6D;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
 </style>
 
 <script>
   function addDisease(location, disease, travelRestriction, prevention, vaccine, medication) {
-    document.getElementById("diseaseDiv").innerHTML =
-      '<div class="w3-container"><h4>Location: '+ 
+    document.getElementById("diseaseDiv").innerHTML +=
+      '<div class="w3-container disease-class"><h4>Location: '+ 
       location +'</h4></div>' +
       '<!--Travel Information Block--><div class="w3-panel"><div class="w3-row-padding" style="margin:0 -16px"><div class="w3-third"><h5>' + '<h5>Disease: </h5>' + 
       disease +'</h5></div><div class="w3-twothird"><h5>Recommended Travel Information</h5><table class="w3-table w3-striped w3-white"><tr><td>' + //<i class="fa fa-plane w3-text-blue w3-large"></i></td><td>Travel Restrictions</td><td>'+ 
@@ -206,6 +218,11 @@
       prevention +'</td></tr><tr><td><i class="fa fa-medkit w3-text-red w3-large"></i></td><td>Vaccines</td><td>'+ 
       vaccine +'</td></tr><tr><td><i class="fa fa-stethoscope w3-text-blue w3-large"></i></td><td>Medication</td><td>'+ 
       medication +'</td></tr></table></div></div></div><br>';
+  }
+
+  function removeDisease(divClass) {
+    const element = document.getElementByClassName(divClass);
+    element.remove();
   }
 
   function addTweet(embedCode) {
