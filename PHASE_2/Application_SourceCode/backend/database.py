@@ -37,11 +37,11 @@ Session = db["Session"]
 def find_user_by_email(email):
 	return User.find_one({"email":email})
 
-def registed_user(user_data):
+def registered_user(user_data):
 	User.insert_one(user_data)
 	return
 
-def Session_update(session_data):
+def session_update(session_data):
 	if(Session.find_one({"u_id":session_data["u_id"]}) is None):
 		Session.insert_one(session_data)
 	return
@@ -51,10 +51,11 @@ def check_session_by_token(token):
 
 def user_list():
 	return User.find()
-def delete_session(token):
 
+def delete_session(token):
 	Session.delete_one({"token":token})
 	return
+
 # ===================================================
 
 def loadReports():
