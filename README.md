@@ -25,7 +25,7 @@ python3 main.py
 
 ## Testing
 
-Run the following test scripts inside the httptestscripts folder inside PHASE_2. May need to invoke test functions via the main function handler.
+Run the following test scripts inside the PHASE_2 httptestscripts and PHASE_1 TestScripts folder. May need to invoke test functions via the main function handler.
 
 ```console
 python3 ${script}
